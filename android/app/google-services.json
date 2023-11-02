@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1050839018647",
+    "project_id": "moneysense-f5f4b",
+    "storage_bucket": "moneysense-f5f4b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1050839018647:android:18ac0bbe775f0c55accdd2",
+        "android_client_info": {
+          "package_name": "com.moneysense"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1050839018647-mmrgrcp1k6aqrjgqmf5pegobbt8k29eq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.moneysense",
+            "certificate_hash": "0a2a1c361a948ddd3e5da0a90f8b42db3dc1b7c7"
+          }
+        },
+        {
+          "client_id": "1050839018647-i9i855hl26dvacia3pqr4k9ff7qn6uki.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZO2jy3VFGeNUvjqrNgYnAQ9EysvJe6B0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1050839018647-i9i855hl26dvacia3pqr4k9ff7qn6uki.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
