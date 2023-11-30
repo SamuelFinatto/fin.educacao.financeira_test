@@ -1,3 +1,4 @@
+import 'database.dart';
 import 'home_page.dart'; // Importe a classe HomePage
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,6 +12,8 @@ Future<void> main() async {
   runApp(MaterialApp(
     home: MyApp(),
   ));
+
+  ;
 }
 
 class MyApp extends StatelessWidget {
@@ -21,11 +24,16 @@ class MyApp extends StatelessWidget {
     final User? user = await _signInWithGoogle();
     if (user != null) {
       userName = user.displayName ?? "Usuário Anônimo"; // Use displayName ou "Usuário Anônimo" se for nulo
+
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => HomePage(userName, _signOut), // Passe o nome do usuário para a HomePage
         ),
       );
+
+
+
+
     } else {
       // Trate erro de autenticação.
     }
@@ -37,6 +45,18 @@ class MyApp extends StatelessWidget {
       User? user = userCredential.user;
       if (user != null) {
         userName = "Usuário Anônimo"; // Defina o nome do usuário anonimamente
+
+        try {
+          var db = Database();
+          await db.connect();
+          var data = await db.fetchSomeData();
+          //print(data);
+          await db.close();
+        } catch (e) {
+          print('Erro ao conectar ou executar a consulta: $e');
+        } finally {
+        }
+
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => HomePage(userName, _signOut), // Passe o nome do usuário para a HomePage
