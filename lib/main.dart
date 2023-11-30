@@ -31,6 +31,24 @@ class MyApp extends StatelessWidget {
     }
   }
 
+  Future<void> _signInAnonymously(BuildContext context) async {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance.signInAnonymously();
+      User? user = userCredential.user;
+      if (user != null) {
+        userName = "Usuário Anônimo"; // Defina o nome do usuário anonimamente
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => HomePage(userName, _signOut), // Passe o nome do usuário para a HomePage
+          ),
+        );
+      }
+    } catch (error) {
+      print("Erro durante o login anônimo: $error");
+      // Trate o erro de autenticação, se necessário
+    }
+  }
+
   Future<void> _signOut(BuildContext context) async {
     try {
       await FirebaseAuth.instance.signOut();
@@ -73,7 +91,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Login com Google'),
+          title: Text('MoneySense - Login'),
         ),
         body: Center(
           child: Column(
@@ -84,6 +102,12 @@ class MyApp extends StatelessWidget {
                   _navigateToHomePage(context); // Navega para a HomePage
                 },
                 child: Text('Login com Google'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  _signInAnonymously(context); // Chama o login anônimo
+                },
+                child: Text('Login Anônimo'),
               ),
             ],
           ),
