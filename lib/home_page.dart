@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'conteudos.dart';
 import 'juros_compostos.dart';
 
 
@@ -55,7 +56,7 @@ class HomePage extends StatelessWidget {
               onPressed: () async {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => JurosCompostos()),
+                  MaterialPageRoute(builder: (context) => Conteudos()),
                 );
               },
               style: ElevatedButton.styleFrom(
