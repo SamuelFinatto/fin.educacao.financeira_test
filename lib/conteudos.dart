@@ -21,18 +21,6 @@ class HomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            // Texto na parte superior da tela
-            Padding(
-              padding: const EdgeInsets.only(top: 50.0),
-              child: Text(
-                'Obrigado pelo acesso, $userName!',
-                textAlign: TextAlign.left,
-                style: const TextStyle(
-                  fontSize: 17, // Tamanho da fonte desejado
-                  // Outras propriedades de estilo podem ser adicionadas aqui, se necessário
-                ),
-              ),
-            ),
             const SizedBox(height: 50), // Espaçamento entre o texto e os botões
             ElevatedButton(
               onPressed: () async {
@@ -52,11 +40,8 @@ class HomePage extends StatelessWidget {
             ),
             const SizedBox(height: 20), // Espaçamento entre os botões
             ElevatedButton(
-              onPressed: () async {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => JurosCompostos()),
-                );
+              onPressed: () {
+                // Adicione a ação desejada para o botão 3
               },
               style: ElevatedButton.styleFrom(
                 textStyle: TextStyle(fontSize: 18),
@@ -87,18 +72,19 @@ class HomePage extends StatelessWidget {
               ),
               child: const Text('Botão 4'),
             ),
+
             // Texto na parte superior da tela
-            const Padding(
-              padding: EdgeInsets.only(top: 30.0),
+            Padding(
+              padding: const EdgeInsets.only(top: 50.0),
               child: Text(
-                    'Para maior eficácia do aprendizado:\n'
+                'Obrigado pelo acesso, $userName!\n\nPara maior eficácia do aprendizado:\n'
                     '- Utilize este app semanalmente;\n'
-                    '- Acesse todas as opções disponíveis;\n'
+                    '- Acesse todas as funcionalidades disponíveis;\n'
                     '- Domine cada conteúdo existente;\n'
                     '- Busque outras fontes de conhecimento.',
                 textAlign: TextAlign.left,
-                style: TextStyle(
-                  fontSize: 16, // Tamanho da fonte desejado
+                style: const TextStyle(
+                  fontSize: 17, // Tamanho da fonte desejado
                   // Outras propriedades de estilo podem ser adicionadas aqui, se necessário
                 ),
               ),
