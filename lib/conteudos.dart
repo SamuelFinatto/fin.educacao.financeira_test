@@ -1,58 +1,60 @@
 import 'package:flutter/material.dart';
+import 'database.dart';
 import 'juros_compostos.dart';
 
 
 class Conteudos extends StatefulWidget {
-
   @override
-  _Conteudos createState() => _Conteudos();
+  _ConteudosState createState() => _ConteudosState();
 }
 
-class _Conteudos extends State<Conteudos> {
+class _ConteudosState extends State<Conteudos> {
+  late List<Map<String, dynamic>> conteudosList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _carregarConteudos(); // Carregar conteúdos ao iniciar o widget
+  }
+
+  Future<void> _carregarConteudos() async {
+    try {
+      var db = Database();
+      var telaDeConteudos = await db.buscarDadosDosConteudos();
+
+      setState(() {
+        conteudosList = telaDeConteudos.map((row) {
+          return {
+            'titulo': row['titulo'], // Ajuste conforme a estrutura do retorno da consulta
+            'conteudo': row['conteudo'].toString(), // Considerando que 'conteudo' é do tipo TEXT
+          };
+        }).toList();
+      });
+
+      await db.close();
+    } catch (e) {
+      print('Erro ao conectar ou executar a consulta: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Conteúdos'),
+        title: const Text('Conteúdos - Educação Financeira'),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            const SizedBox(height: 20),
-            MyExpansionTile(
-              title: 'Simular juros compostos',
-              content:
-              'Conteúdo relacionado à simulação de juros compostos.\n'
-                  'Conteúdo relacionado à simulação de juros compostos.\n'
-                  'Conteúdo relacionado à simulação de juros compostos.\n'
-                  'Conteúdo relacionado à simulação de juros compostos.\n'
-                  'Conteúdo relacionado à simulação de juros compostos.\n'
-                  'Conteúdo relacionado à simulação de juros compostos.\n',
-            ),
-            const SizedBox(height: 20),
-            MyExpansionTile(
-              title: 'Conteúdos sobre Educação Financeira',
-              content: 'Conteúdo relacionado à educação financeira.',
-            ),
-            const SizedBox(height: 20),
-            MyExpansionTile(
-              title: 'Botão 2',
-              content: 'Conteúdo relacionado ao botão 2.',
-            ),
-            const SizedBox(height: 20),
-            MyExpansionTile(
-              title: 'Botão 4',
-              content: 'Conteúdo relacionado ao botão 4.',
-            ),
-          ],
-        ),
+      body: ListView.builder(
+        itemCount: conteudosList.length,
+        itemBuilder: (context, index) {
+          final conteudo = conteudosList[index];
+          return MyExpansionTile(
+            title: conteudo['titulo'],
+            content: conteudo['conteudo'],
+          );
+        },
       ),
     );
   }
-
 }
 
 class MyExpansionTile extends StatefulWidget {
@@ -74,11 +76,24 @@ class _MyExpansionTileState extends State<MyExpansionTile> {
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
-      title: Text(widget.title),
+      title: Text(
+        widget.title,
+        style: TextStyle(
+          fontSize: 19, // Tamanho da fonte para o título
+          fontWeight: FontWeight.w500, // Peso da fonte, se necessário
+          color: Colors.green[900], // Cor do título
+        ),
+      ),
       children: [
         Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Text(widget.content),
+          padding: const EdgeInsets.all(25.0),
+          child: Text(
+            widget.content,
+            style: TextStyle(
+              fontSize: 18, // Tamanho da fonte para o conteúdo
+              // Outros estilos de texto, se necessário
+            ),
+          ),
         ),
       ],
       onExpansionChanged: (isExpanded) {

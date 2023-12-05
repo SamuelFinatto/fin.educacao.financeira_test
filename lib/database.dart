@@ -65,19 +65,19 @@ class Database {
 
     await connect(); // Utilize o método connect() da instância atual
 
-    var results = await _connection.query('SELECT * FROM topico');
+    var results = await _connection.query('SELECT titulo, conteudo FROM topico order by 1');
 
     print('Número de linhas retornadas: ${results.length}');
 
-    if (results.isNotEmpty) {
-      for (var row in results) {
-        print('ID: ${row[0]}'); // Acessa a primeira coluna, substitua pelo nome da coluna conforme necessário
-        print('idOrientador: ${row[1]}'); // Acessa a segunda coluna, substitua pelo nome da coluna conforme necessário
-        // Adicione outros acessos às colunas conforme necessário
-      }
-    } else {
-      print('Nenhum resultado retornado da consulta.');
-    }
+    // if (results.isNotEmpty) {
+    //   for (var row in results) {
+    //     print('ID: ${row[0]}'); // Acessa a primeira coluna, substitua pelo nome da coluna conforme necessário
+    //     print('idOrientador: ${row[1]}'); // Acessa a segunda coluna, substitua pelo nome da coluna conforme necessário
+    //     // Adicione outros acessos às colunas conforme necessário
+    //   }
+    // } else {
+    //   print('Nenhum resultado retornado da consulta.');
+    // }
     return results.toList();
   }
 }
