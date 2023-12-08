@@ -80,4 +80,12 @@ class Database {
     // }
     return results.toList();
   }
+
+  Future<List<ResultRow>> buscarDadosDosOrientadores() async {
+
+    await connect(); // Utilize o método connect() da instância atual
+    var results = await _connection.query('SELECT nome, telefone FROM orientador order by 1');
+    print('Número de linhas retornadas: ${results.length}');
+    return results.toList();
+  }
 }

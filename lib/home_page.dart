@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:moneysense/doacao.dart';
 import 'conteudos.dart';
 import 'juros_compostos.dart';
+import 'orientadores.dart';
 
 
 class HomePage extends StatelessWidget {
@@ -45,7 +46,7 @@ class HomePage extends StatelessWidget {
               },
               style: ElevatedButton.styleFrom(
                 textStyle: const TextStyle(fontSize: 18),
-                fixedSize: const Size.fromHeight(70), // Ajuste a altura desejada aqui
+                fixedSize: const Size(250,70), // Ajuste a largura e altura do botão respectivamente
               ),
               child: const Text(
                 'Simular juros compostos',
@@ -62,7 +63,7 @@ class HomePage extends StatelessWidget {
               },
               style: ElevatedButton.styleFrom(
                 textStyle: TextStyle(fontSize: 18),
-                fixedSize: const Size.fromHeight(70), // Ajuste a altura desejada aqui
+                fixedSize: const Size(250,70), // Ajuste a largura e altura do botão respectivamente
               ),
               child: const Text(
                 'Conteúdos sobre Educação Financeira',
@@ -79,18 +80,24 @@ class HomePage extends StatelessWidget {
               },
               style: ElevatedButton.styleFrom(
                 textStyle: const TextStyle(fontSize: 18),
+                fixedSize: const Size(250,70), // Ajuste a largura e altura do botão respectivamente
               ),
               child: const Text('Doação ao projeto'),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                // Adicione a ação desejada para o botão 4
+              onPressed: () async {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Orientador()),
+                );
               },
               style: ElevatedButton.styleFrom(
                 textStyle: const TextStyle(fontSize: 18),
+                fixedSize: const Size(250,70), // Ajuste a largura e altura do botão respectivamente
               ),
-              child: const Text('Botão 4'),
+              child: const Text('Contatar um\nOrientador Financeiro',
+                textAlign: TextAlign.center,),
             ),
             // Texto na parte superior da tela
             const Padding(

@@ -11,8 +11,8 @@ class Doacao extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          SizedBox(height: 20),
-          Padding(
+          const SizedBox(height: 20),
+          const Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.0),
             child: Text(
               'Sua doação tem como propósito:',
@@ -22,7 +22,7 @@ class Doacao extends StatelessWidget {
               ),
             ),
           ),
-          Padding(
+          const Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.0),
             child: Text(
               '- a manutenção e evolução do app;\n'
@@ -34,7 +34,7 @@ class Doacao extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Center(
             child: Image.asset(
               'assets/images/qrcodepix.png',
@@ -42,8 +42,8 @@ class Doacao extends StatelessWidget {
               height: 280,
             ),
           ),
-          SizedBox(height: 20),
-          Padding(
+          const SizedBox(height: 20),
+          const Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.0),
             child: Text(
               'Desenvolvedores:',
@@ -53,7 +53,7 @@ class Doacao extends StatelessWidget {
               ),
             ),
           ),
-          Padding(
+          const Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.0),
             child: Text(
                   '- Henrique Franceschini\n'

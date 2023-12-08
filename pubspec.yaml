@@ -37,7 +37,11 @@ dependencies:
   fl_chart: ^0.64.0
   mysql1: ^0.19.1
   flutter_dotenv: ^5.0.2
-  flutter_html: ^2.1.2
+  url_launcher: ^6.0.13
+  # flutter_html: ^2.1.2  ************NUNCA UTILIZAR ESSA DEPENDÊNCIA DO CARALHO QUE SÓ GEROU PROBLEMAS************
+
+  # ******************** TODA VEZ QUE HOUVER UMA NOVA DEPENDÊNCIA, FECHE O PROJETO E EXECUTE NOVAMENTE PARA TESTAR SE IRÁ COMPILAR ********************
+
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
