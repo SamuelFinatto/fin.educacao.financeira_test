@@ -65,7 +65,7 @@ class Database {
 
     await connect(); // Utilize o método connect() da instância atual
 
-    var results = await _connection.query('SELECT titulo, conteudo FROM topico order by 1');
+    var results = await _connection.query('SELECT titulo, conteudo FROM topico WHERE situacao = 1 order by 1');
 
     print('Número de linhas retornadas: ${results.length}');
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moneysense/doacao.dart';
 import 'conteudos.dart';
 import 'juros_compostos.dart';
 
@@ -70,13 +71,16 @@ class HomePage extends StatelessWidget {
             ),
             const SizedBox(height: 20), // Espaçamento entre os botões // Espaçamento entre os botões
             ElevatedButton(
-              onPressed: () {
-                // Adicione a ação desejada para o botão 2
+              onPressed: () async {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Doacao()),
+                );
               },
               style: ElevatedButton.styleFrom(
                 textStyle: const TextStyle(fontSize: 18),
               ),
-              child: const Text('Botão 2'),
+              child: const Text('Doação ao projeto'),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
@@ -92,7 +96,7 @@ class HomePage extends StatelessWidget {
             const Padding(
               padding: EdgeInsets.only(top: 30.0),
               child: Text(
-                    'Para maior eficácia do aprendizado:\n'
+                'Para maior eficácia do aprendizado:\n'
                     '- Utilize este app semanalmente;\n'
                     '- Acesse todas as opções disponíveis;\n'
                     '- Domine cada conteúdo existente;\n'
