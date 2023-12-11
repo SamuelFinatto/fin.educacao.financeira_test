@@ -49,12 +49,20 @@ class _OrientadorState extends State<Orientador> {
   List<Widget> _construirListaDeBotoes() {
     return orientadoresList.map((conteudo) {
       return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 4.0),
         child: ElevatedButton(
           onPressed: () {
             _abrirWhatsApp(conteudo['telefone']);
           },
-          child: Text(conteudo['nome'] ?? 'Sem título'),
+          style: ElevatedButton.styleFrom(
+            primary: Colors.black38, // Cor de fundo do botão
+          ),
+          child: Text(
+            conteudo['nome'] ?? 'Sem título',
+            style: const TextStyle(
+              fontSize: 17, // Defina o tamanho da fonte desejado
+            ),
+          ),
         ),
       );
     }).toList();
@@ -64,7 +72,8 @@ class _OrientadorState extends State<Orientador> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Orientadores Financeiros'),
+        title: Text('Voltar'),
+        backgroundColor: Colors.green.shade800 // Defina a cor desejada para a barra superior desta tela
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -82,7 +91,7 @@ class _OrientadorState extends State<Orientador> {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: _construirListaDeBotoes(),

@@ -110,13 +110,13 @@ class LoginBody extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
               _navigateToHomePage(context); // Navega para a HomePage
             },
             child: Text('Login com Google'),
           ),
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
               _signInAnonymously(context); // Chama o login anônimo
             },
             child: Text('Login Anônimo'),

@@ -26,12 +26,15 @@ class _JurosCompostosState extends State<JurosCompostos> {
   String formatPercentage(String value) {
     final cleanValue = value.replaceAll(RegExp(r'[^\d]'), '');
     final parsedValue = double.parse(cleanValue) / 100;
-    return '%${parsedValue.clamp(0, 100).toStringAsFixed(2)}';
+    return '${parsedValue.clamp(0, 10).toStringAsFixed(2)}';
   }
 
   String formatInteger(String value) {
+    if (value.isEmpty) {
+      return ''; // Retorna uma string vazia ou outra ação apropriada para um valor vazio
+    }
     final cleanValue = value.replaceAll(RegExp(r'[^\d]'), '');
-    return '${int.parse(cleanValue).clamp(0, 99)}';
+    return '${int.parse(cleanValue).clamp(0, 50)}';
   }
 
   double calculateCompoundInterest(double principal, double rate, int time) {
@@ -57,17 +60,43 @@ class _JurosCompostosState extends State<JurosCompostos> {
 
   @override
   Widget build(BuildContext context) {
-    double valorIntervaloGrafico = 20000;
+    double valorIntervaloGrafico = 10000;
     double intervaloHorizontal = 1;
     double valorMinY = 0;
-    double valorMaxY = (calculateFinalCompoundInterest(_controller1.text.isEmpty ? 0 : double.parse(_controller1.text.replaceAll('.', '').replaceAll(',', '.').replaceAll('R\$', '')),
-        _controller3.text.isEmpty ? 0 : double.parse(_controller3.text.replaceAll('.', '').replaceAll(',', '.').replaceAll('%', '')),
-        _controller4.text.isEmpty ? 0 : int.parse(_controller4.text),
-        _controller2.text.isEmpty ? 0 : double.parse(_controller2.text.replaceAll('.', '').replaceAll(',', '.').replaceAll('R\$', '')))
-        );
+    double valorMaxY = 100;
+    double valorMaxYaux = 0;
     String valorPeriodo = _controller4.text.isEmpty ? '1' : _controller4.text;
 
-    if (valorMaxY == null || valorMaxY == 0.0) {
+    if(_controller1.text.isNotEmpty && _controller2.text.isNotEmpty && _controller4.text.isNotEmpty){
+      valorMaxYaux = (calculateFinalCompoundInterest(_controller1.text.isEmpty ? 0 : double.parse(_controller1.text.replaceAll('.', '').replaceAll(',', '.').replaceAll('R\$', '')),
+          _controller3.text.isEmpty ? 0 : double.parse(_controller3.text.replaceAll('.', '').replaceAll(',', '.')),
+          _controller4.text.isEmpty ? 0 : int.parse(_controller4.text),
+          _controller2.text.isEmpty ? 0 : double.parse(_controller2.text.replaceAll('.', '').replaceAll(',', '.').replaceAll('R\$', '')))
+      );
+
+      valorMaxY = ((valorMaxYaux ~/ 5000) + 1) * 5000;
+      int remainder = (valorMaxY % 5).toInt(); // Restante da divisão por 5
+
+      if (remainder != 0) {
+        int adjustment = 5 - remainder; // Ajuste necessário para torná-lo divisível por 5
+        valorMaxY += adjustment; // Aplicando o ajuste
+      }
+
+      if(valorMaxY == 5000) {
+        valorMaxY = ((valorMaxYaux ~/ 1000) + 1) * 1000;
+        int remainder = (valorMaxY % 5).toInt(); // Restante da divisão por 5
+
+        if (remainder != 0) {
+          int adjustment = 5 - remainder; // Ajuste necessário para torná-lo divisível por 5
+          valorMaxY += adjustment; // Aplicando o ajuste
+        }
+      }
+
+      // int nextThousand = ((valorMaxY ~/ 1000) + 1) * 1000; // Próximo milhar
+      // valorMaxY = nextThousand + (0 - (nextThousand % 5)); // Próximo milhar divisível por 5
+    }
+
+    if (valorMaxY == null || valorMaxY < 100) {
       valorMaxY = 100.0;
     }
 
@@ -80,21 +109,25 @@ class _JurosCompostosState extends State<JurosCompostos> {
     if(intervaloHorizontal == null || intervaloHorizontal == 0){
       intervaloHorizontal = 1;
     }
-    // print('valorMaxY $valorMaxY');
+    print('valorMaxY $valorMaxY');
     // print('teste $intervaloHorizontal');
     return Scaffold(
       appBar: AppBar(
         title: const Text('Voltar'),
+        backgroundColor: Colors.green.shade800 // Defina a cor desejada para a barra superior desta tela
       ),
-      body: Stack(
-        children: <Widget>[
+    body: SingleChildScrollView(
+    child: Container(
+    height: MediaQuery.of(context).size.height + 50, // Define a altura do Container
+    child: Stack(
+    children: <Widget>[
           Positioned(
             top: 0,
             left: 0,
             right: 0,
             child: Container(
               color: Colors.white, // Cor de fundo do texto
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(15.0),
               child: const Text(
                 'Simulador de juros compostos',
                 style: TextStyle(
@@ -106,171 +139,262 @@ class _JurosCompostosState extends State<JurosCompostos> {
           ),
           // Aqui pode adicionar o restante do conteúdo abaixo do texto
           Positioned(
-            top: 20, // Altura abaixo do texto principal
+            top: 30, // Altura abaixo do texto principal
             left: 0,
-            right: 20,
+            right: 15,
             child: Container(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(15.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  TextFormField(
-                    controller: _controller1,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly,
-                      LengthLimitingTextInputFormatter(12),
-                    ],
-                    decoration: const InputDecoration(
-                      labelText: 'Valor inicial',
-                    ),
-                    style: const TextStyle(fontSize: 18),
-                    onChanged: (value) {
-                      final formatted = formatCurrency(value);
-                      final newCursorPosition = formatted.length;
-                      setState(() {
-                        _controller1.value = TextEditingValue(
-                          text: formatted,
-                          selection: TextSelection.collapsed(offset: newCursorPosition < 0 ? 0 : newCursorPosition),
-                        );
-                      });
-                    },
-                  ),
-                  TextFormField(
-                    controller: _controller2,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly,
-                      LengthLimitingTextInputFormatter(12),
-                    ],
-                    decoration: const InputDecoration(
-                      labelText: 'Valor mensal',
-                    ),
-                    style: const TextStyle(fontSize: 18),
-                    onChanged: (value) {
-                      final formatted = formatCurrency(value);
-                      final newCursorPosition = formatted.length;
-                      setState(() {
-                        _controller2.value = TextEditingValue(
-                          text: formatted,
-                          selection: TextSelection.collapsed(offset: newCursorPosition < 0 ? 0 : newCursorPosition),
-                        );
-                      });
-                    },
-                  ),
-                  TextFormField(
-                    controller: _controller3,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly,
-                      LengthLimitingTextInputFormatter(12),
-                    ],
-                    decoration: const InputDecoration(
-                      labelText: 'Taxa de juros mensal',
-                    ),
-                    style: const TextStyle(fontSize: 18),
-                    onChanged: (value) {
-                      final formatted = formatPercentage(value);
-                      final newCursorPosition = formatted.length;
-                      setState(() {
-                        _controller3.value = TextEditingValue(
-                          text: formatted,
-                          selection: TextSelection.collapsed(offset: newCursorPosition < 0 ? 0 : newCursorPosition),
-                        );
-                      });
-                    },
-                  ),
-                  TextFormField(
-                    controller: _controller4,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly,
-                      LengthLimitingTextInputFormatter(2),
-                    ],
-                    decoration: const InputDecoration(
-                      labelText: 'Período de:',
-                    ),
-                    style: const TextStyle(fontSize: 18),
-                    onChanged: (value) {
-                      if (value.isNotEmpty && int.parse(value) == 0) {
-                        setState(() {
-                          _controller4.text = ''; // Limpa o campo se zero for digitado
-                        });
-                      } else {
-                        final formatted = formatInteger(value);
-                        final newCursorPosition = formatted.length;
-                        setState(() {
-                          _controller4.value = TextEditingValue(
-                            text: formatted,
-                            selection: TextSelection.collapsed(offset: newCursorPosition),
-                          );
-                        });
-                      }
-                    },
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 50.0), // Altere o valor para ajustar a posição
-                    child: SizedBox(
-                      height: 250,
-                      child: LineChart(
-                        LineChartData(
-                          minX: 0,
-                          maxX: double.parse(valorPeriodo)*12,
-                          minY: 0,
-                          maxY: ((valorMaxY + valorMaxY/10) ~/ valorIntervaloGrafico) * valorIntervaloGrafico,
-                          lineBarsData: [
-                            lineChartBarData1_1,
-                            lineChartBarData1_2,
-                            lineChartBarData1_3
+
+                  const SizedBox(height: 10),
+                  // LINHA 1
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Valor inicial:',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      Container(
+                        width: 160, // Largura desejada do campo
+                        height: 30, // Altura desejada do campo
+                        child: TextFormField(
+                          controller: _controller1,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(9),
                           ],
-                          borderData: FlBorderData(border: const Border(
-                            bottom: BorderSide(color: Colors.black54, width: 1),
-                            left: BorderSide(color: Colors.transparent),
-                            right: BorderSide(color: Colors.transparent),
-                            top: BorderSide(color: Colors.transparent))
-                          ),
-                          titlesData: FlTitlesData(
-                              rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                              topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                              leftTitles: AxisTitles(sideTitles: SideTitles(
-                                  showTitles: true,
-                                  reservedSize: 10*(((valorMaxY / 100).ceil() * 100).toString()).length.toDouble(),
-                                  interval: 5+((valorMaxY + valorMaxY/10) ~/ valorIntervaloGrafico) * valorIntervaloGrafico/5
-                              )),
-                              bottomTitles: AxisTitles(sideTitles: SideTitles(
-                                showTitles: true,
-                                reservedSize: 27,
-                                interval: (double.parse(valorPeriodo)*12)/6
-                              )),
-                          ),
-                          gridData: FlGridData(
-                            show: true,
-                            drawVerticalLine: false,
-                            horizontalInterval: intervaloHorizontal,
-                            verticalInterval: 1,
-                            getDrawingHorizontalLine: (value) {
-                              return const FlLine(
-                                color: Colors.black26,
-                                strokeWidth: 1,
+                          style: const TextStyle(fontSize: 18),
+                          onChanged: (value) {
+                            final formatted = formatCurrency(value);
+                            final newCursorPosition = formatted.length;
+                            setState(() {
+                              _controller1.value = TextEditingValue(
+                                text: formatted,
+                                selection: TextSelection.collapsed(offset: newCursorPosition < 0 ? 0 : newCursorPosition),
                               );
-                            },
-                            getDrawingVerticalLine: (value) {
-                              return const FlLine(
-                                color: Colors.black54,
-                                strokeWidth: 1,
-                              );
-                            },
+                            });
+                          },
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(25)),
+                            ),
+                            contentPadding: EdgeInsets.symmetric(horizontal: 12),
                           ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
+
+                  const SizedBox(height: 10),
+                  // VALOR MENSAL
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Valor mensal:',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      Container(
+                        width: 150, // Largura desejada do campo
+                        height: 30, // Altura desejada do campo
+                        child: TextFormField(
+                          controller: _controller2,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(8),
+                          ],
+                          style: const TextStyle(fontSize: 18),
+                          onChanged: (value) {
+                            final formatted = formatCurrency(value);
+                            final newCursorPosition = formatted.length;
+                            setState(() {
+                              _controller2.value = TextEditingValue(
+                                text: formatted,
+                                selection: TextSelection.collapsed(offset: newCursorPosition < 0 ? 0 : newCursorPosition),
+                              );
+                            });
+                          },
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(25)),
+                            ),
+                            contentPadding: EdgeInsets.symmetric(horizontal: 12),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 10),
+                  // TAXA DE JUROS
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Taxa de juros mensal: ',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      Container(
+                        width: 95, // Largura desejada do campo
+                        height: 30, // Altura desejada do campo
+                        child: TextFormField(
+                          controller: _controller3,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(4),
+                          ],
+                          style: const TextStyle(fontSize: 18),
+                          onChanged: (value) {
+                            final formatted = formatPercentage(value);
+                            final newCursorPosition = formatted.length;
+                            setState(() {
+                              _controller3.value = TextEditingValue(
+                                text: formatted,
+                                selection: TextSelection.collapsed(offset: newCursorPosition < 0 ? 0 : newCursorPosition),
+                              );
+                            });
+                          },
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(25)),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+                            suffixText: '%', // Adiciona o texto "%" ao lado direito
+                            suffixStyle: const TextStyle(fontSize: 18), // Estilo do texto do sufixo
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 10),
+                  // PERÍODO EM ANOS
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Período em anos:',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      Container(
+                        width: 95, // Largura desejada do campo
+                        height: 30, // Altura desejada do campo
+                        child: TextFormField(
+                          controller: _controller4,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(1),
+                          ],
+                          style: const TextStyle(fontSize: 18),
+                          onChanged: (value) {
+                            if (value.isNotEmpty && int.parse(value) == 0) {
+                              setState(() {
+                                _controller4.text =''; // Limpa o campo se zero for digitado
+                              });
+                            } else {
+                              final formatted = formatInteger(value);
+                              final newCursorPosition = formatted.length;
+                              setState(() {
+                                _controller4.value = TextEditingValue(
+                                  text: formatted,
+                                  selection: TextSelection.collapsed(
+                                      offset: newCursorPosition),
+                                );
+                              });
+                            }
+                          },
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(25)),
+                            ),
+                            contentPadding: EdgeInsets.symmetric(horizontal: 12),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 40),
+
+                  // LINHA DO GRÁFICO
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Container(
+                          height: 230, // Defina a altura do gráfico
+                          child: LineChart(
+                            LineChartData(
+                              minX: 0,
+                              maxX: double.parse(valorPeriodo)*12,
+                              minY: 0,
+                              maxY: valorMaxY,
+                              lineBarsData: [
+                                lineChartBarData1_1,
+                                lineChartBarData1_2,
+                                lineChartBarData1_3
+                              ],
+                              borderData: FlBorderData(border: const Border(
+                                  bottom: BorderSide(color: Colors.black54, width: 1),
+                                  left: BorderSide(color: Colors.transparent),
+                                  right: BorderSide(color: Colors.transparent),
+                                  top: BorderSide(color: Colors.transparent))
+                              ),
+                              titlesData: FlTitlesData(
+                                rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                                topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                                leftTitles: AxisTitles(sideTitles: SideTitles(
+                                    showTitles: true,
+                                    reservedSize: (valorMaxY > 500 ? 8 : 11)*(((valorMaxY / 100).ceil() * 100).toString()).length.toDouble(),
+                                    interval: (valorMaxY < 5000 ? (valorMaxY / 2) : (valorMaxY / 5))
+                                )),
+                                bottomTitles: AxisTitles(sideTitles: SideTitles(
+                                    showTitles: true,
+                                    reservedSize: 27,
+                                    interval: (double.parse(valorPeriodo)*12)/6
+                                )),
+                              ),
+                              gridData: FlGridData(
+                                show: true,
+                                drawVerticalLine: false,
+                                horizontalInterval: (valorMaxY < 5000 ? (valorMaxY / 2) : (valorMaxY / 5))-0.1, // necessário reduzir o mínimo que seja (em -0.01) para exibir a linha tracejada horizontal para o maior valor de Y
+                                verticalInterval: 1,
+                                getDrawingHorizontalLine: (value) {
+                                  return const FlLine(
+                                    color: Colors.black26,
+                                    strokeWidth: 0.5,
+                                    dashArray: [4], // Aqui, [5] define o comprimento dos traços e espaços
+                                  );
+                                },
+                                getDrawingVerticalLine: (value) {
+                                  return const FlLine(
+                                    color: Colors.black54,
+                                    strokeWidth: 1,
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      // Mais widgets, se necessário
+                    ],
+                  )
                 ],
               ),
             ),
           ),
         ],
       ),
+    ),
+    ),
     );
   }
 
@@ -281,7 +405,7 @@ class _JurosCompostosState extends State<JurosCompostos> {
     isStrokeCapRound: true,
     dotData: const FlDotData(show: false),
     belowBarData: BarAreaData(show: false),
-    spots: _calculateSpotsDinheiroAcumulado(_controller3.text.isEmpty ? 0.0 : (double.parse(_controller3.text.replaceAll('%', '')))/100),
+    spots: _calculateSpotsDinheiroAcumulado(_controller3.text.isEmpty ? 0.0 : (double.parse(_controller3.text))/100),
   );
 
   LineChartBarData get lineChartBarData1_2 => LineChartBarData(
@@ -291,7 +415,7 @@ class _JurosCompostosState extends State<JurosCompostos> {
     isStrokeCapRound: true,
     dotData: const FlDotData(show: false),
     belowBarData: BarAreaData(show: false),
-    spots: _calculateSpotsTotalJuros(_controller3.text.isEmpty ? 0.0 : (double.parse(_controller3.text.replaceAll('%', '')))/100),
+    spots: _calculateSpotsTotalJuros(_controller3.text.isEmpty ? 0.0 : (double.parse(_controller3.text))/100),
   );
 
   LineChartBarData get lineChartBarData1_3 => LineChartBarData(
@@ -301,7 +425,7 @@ class _JurosCompostosState extends State<JurosCompostos> {
     isStrokeCapRound: true,
     dotData: const FlDotData(show: false),
     belowBarData: BarAreaData(show: false),
-    spots: _calculateSpotsDinheiroInvestido(_controller3.text.isEmpty ? 0.0 : (double.parse(_controller3.text.replaceAll('%', '')))/100),
+    spots: _calculateSpotsDinheiroInvestido(_controller3.text.isEmpty ? 0.0 : (double.parse(_controller3.text))/100),
   );
 
   List<FlSpot> _calculateSpotsTotalJuros(double rate) {

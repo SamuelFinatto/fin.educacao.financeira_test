@@ -17,6 +17,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Página Inicial'),
+        backgroundColor: Colors.green.shade800 // Defina a cor desejada para a barra superior desta tela
       ),
       drawer: MyDrawer(signOut, userName, email), // Crie o Drawer como um widget separado
       body: Center(

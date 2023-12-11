@@ -41,7 +41,8 @@ class _ConteudosState extends State<Conteudos> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Conteúdos - Educação Financeira'),
+        title: const Text('Voltar'),
+        backgroundColor: Colors.green.shade800 // Defina a cor desejada para a barra superior desta tela
       ),
       body: ListView.builder(
         itemCount: conteudosList.length,
