@@ -55,7 +55,10 @@ class _OrientadorState extends State<Orientador> {
             _abrirWhatsApp(conteudo['telefone']);
           },
           style: ElevatedButton.styleFrom(
-            primary: Colors.black38, // Cor de fundo do botão
+            foregroundColor: Colors.white, backgroundColor: Color(0xFF004086), // Cor do texto do botão
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10), // Borda arredondada
+            ),
           ),
           child: Text(
             conteudo['nome'] ?? 'Sem título',
@@ -72,7 +75,7 @@ class _OrientadorState extends State<Orientador> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Voltar'),
+        title: Text('Orientador Financeiro'),
         backgroundColor: Colors.green.shade800 // Defina a cor desejada para a barra superior desta tela
       ),
       body: SingleChildScrollView(

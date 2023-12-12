@@ -75,10 +75,16 @@ flutter:
   assets:
     - .env
     - assets/images/google.png
+    - assets/images/google_com_sombra.png
+    - assets/images/google_com_fundo.png
     - assets/images/logo_transparente.png
+    - assets/images/logo_transparente_com_sombra.png
+    - assets/images/perfil_transparente_com_sombra.png
     - assets/images/qrcodepix.png
     - assets/images/qrcodepix_quinze.png
     - assets/images/qrcodepix_cinquenta.png
+    - assets/images/anonimo.png
+    - assets/images/anonimo_branco_maior_na_esquerda.png
 
 
 

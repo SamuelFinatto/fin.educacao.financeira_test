@@ -113,7 +113,7 @@ class _JurosCompostosState extends State<JurosCompostos> {
     // print('teste $intervaloHorizontal');
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Voltar'),
+        title: const Text('Simular Juros Compostos'),
         backgroundColor: Colors.green.shade800 // Defina a cor desejada para a barra superior desta tela
       ),
     body: SingleChildScrollView(
@@ -121,25 +121,9 @@ class _JurosCompostosState extends State<JurosCompostos> {
     height: MediaQuery.of(context).size.height + 50, // Define a altura do Container
     child: Stack(
     children: <Widget>[
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              color: Colors.white, // Cor de fundo do texto
-              padding: const EdgeInsets.all(15.0),
-              child: const Text(
-                'Simulador de juros compostos',
-                style: TextStyle(
-                  fontSize: 22.0,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-          ),
           // Aqui pode adicionar o restante do conteúdo abaixo do texto
           Positioned(
-            top: 30, // Altura abaixo do texto principal
+            top: 0, // Altura abaixo do texto principal
             left: 0,
             right: 15,
             child: Container(
@@ -149,6 +133,74 @@ class _JurosCompostosState extends State<JurosCompostos> {
                 children: [
 
                   const SizedBox(height: 10),
+
+                  // LINHA DO GRÁFICO
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Container(
+                          height: 300, // Defina a altura do gráfico
+                          child: LineChart(
+                            LineChartData(
+                              minX: 0,
+                              maxX: double.parse(valorPeriodo)*12,
+                              minY: 0,
+                              maxY: valorMaxY,
+                              lineBarsData: [
+                                lineChartBarData1_1,
+                                lineChartBarData1_2,
+                                lineChartBarData1_3
+                              ],
+                              borderData: FlBorderData(border: const Border(
+                                  bottom: BorderSide(color: Colors.black54, width: 1),
+                                  left: BorderSide(color: Colors.transparent),
+                                  right: BorderSide(color: Colors.transparent),
+                                  top: BorderSide(color: Colors.transparent))
+                              ),
+                              titlesData: FlTitlesData(
+                                rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                                topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                                leftTitles: AxisTitles(sideTitles: SideTitles(
+                                    showTitles: true,
+                                    reservedSize: (valorMaxY > 500 ? 8 : 11)*(((valorMaxY / 100).ceil() * 100).toString()).length.toDouble(),
+                                    interval: (valorMaxY < 5000 ? (valorMaxY / 2) : (valorMaxY / 5))
+                                )),
+                                bottomTitles: AxisTitles(sideTitles: SideTitles(
+                                    showTitles: true,
+                                    reservedSize: 27,
+                                    interval: (double.parse(valorPeriodo)*12)/6
+                                )),
+                              ),
+                              gridData: FlGridData(
+                                show: true,
+                                drawVerticalLine: false,
+                                horizontalInterval: (valorMaxY < 5000 ? (valorMaxY / 2) : (valorMaxY / 5))-0.1, // necessário reduzir o mínimo que seja (em -0.01) para exibir a linha tracejada horizontal para o maior valor de Y
+                                verticalInterval: 1,
+                                getDrawingHorizontalLine: (value) {
+                                  return const FlLine(
+                                    color: Colors.black26,
+                                    strokeWidth: 0.5,
+                                    dashArray: [4], // Aqui, [5] define o comprimento dos traços e espaços
+                                  );
+                                },
+                                getDrawingVerticalLine: (value) {
+                                  return const FlLine(
+                                    color: Colors.black54,
+                                    strokeWidth: 1,
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      // Mais widgets, se necessário
+                    ],
+                  ),
+
+                  const SizedBox(height: 20),
+
                   // LINHA 1
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -321,72 +373,6 @@ class _JurosCompostosState extends State<JurosCompostos> {
                     ],
                   ),
 
-                  const SizedBox(height: 40),
-
-                  // LINHA DO GRÁFICO
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Container(
-                          height: 230, // Defina a altura do gráfico
-                          child: LineChart(
-                            LineChartData(
-                              minX: 0,
-                              maxX: double.parse(valorPeriodo)*12,
-                              minY: 0,
-                              maxY: valorMaxY,
-                              lineBarsData: [
-                                lineChartBarData1_1,
-                                lineChartBarData1_2,
-                                lineChartBarData1_3
-                              ],
-                              borderData: FlBorderData(border: const Border(
-                                  bottom: BorderSide(color: Colors.black54, width: 1),
-                                  left: BorderSide(color: Colors.transparent),
-                                  right: BorderSide(color: Colors.transparent),
-                                  top: BorderSide(color: Colors.transparent))
-                              ),
-                              titlesData: FlTitlesData(
-                                rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                                topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                                leftTitles: AxisTitles(sideTitles: SideTitles(
-                                    showTitles: true,
-                                    reservedSize: (valorMaxY > 500 ? 8 : 11)*(((valorMaxY / 100).ceil() * 100).toString()).length.toDouble(),
-                                    interval: (valorMaxY < 5000 ? (valorMaxY / 2) : (valorMaxY / 5))
-                                )),
-                                bottomTitles: AxisTitles(sideTitles: SideTitles(
-                                    showTitles: true,
-                                    reservedSize: 27,
-                                    interval: (double.parse(valorPeriodo)*12)/6
-                                )),
-                              ),
-                              gridData: FlGridData(
-                                show: true,
-                                drawVerticalLine: false,
-                                horizontalInterval: (valorMaxY < 5000 ? (valorMaxY / 2) : (valorMaxY / 5))-0.1, // necessário reduzir o mínimo que seja (em -0.01) para exibir a linha tracejada horizontal para o maior valor de Y
-                                verticalInterval: 1,
-                                getDrawingHorizontalLine: (value) {
-                                  return const FlLine(
-                                    color: Colors.black26,
-                                    strokeWidth: 0.5,
-                                    dashArray: [4], // Aqui, [5] define o comprimento dos traços e espaços
-                                  );
-                                },
-                                getDrawingVerticalLine: (value) {
-                                  return const FlLine(
-                                    color: Colors.black54,
-                                    strokeWidth: 1,
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      // Mais widgets, se necessário
-                    ],
-                  )
                 ],
               ),
             ),

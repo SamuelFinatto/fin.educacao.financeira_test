@@ -105,24 +105,114 @@ class LoginBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          ElevatedButton(
-            onPressed: () async {
-              _navigateToHomePage(context); // Navega para a HomePage
-            },
-            child: Text('Login com Google'),
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFF002B64), // Cor inicial do gradiente
+              Color(0xFF509EFF), // Cor final do gradiente
+            ],
           ),
-          ElevatedButton(
-            onPressed: () async {
-              _signInAnonymously(context); // Chama o login anônimo
-            },
-            child: Text('Login Anônimo'),
-          ),
-        ],
+        ),
+        child: Stack(
+          children: <Widget>[
+            Positioned(
+              top: 150,
+              left: 0,
+              right: 0,
+              child: Container(
+                alignment: Alignment.center,
+                height: 200, // Defina a altura desejada para a imagem
+                child: Image.asset(
+                  'assets/images/logo_transparente_com_sombra.png', // Insira o caminho para a sua imagem
+                  fit: BoxFit.contain, // Ajuste para o tipo de redimensionamento desejado
+                ),
+              ),
+            ),
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(height: 300), // Adiciona um espaço acima dos botões
+                  SizedBox(
+                    width: 280, // Defina a largura desejada
+                    height: 48, // Defina a altura desejada
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        _navigateToHomePage(context); // Navega para a HomePage
+                      },
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20), // Define o raio dos cantos
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Image.asset(
+                            'assets/images/google_com_fundo.png', // Insira o caminho para a sua imagem
+                            width: 39, // Defina a largura da imagem
+                            height: 39, // Defina a altura da imagem
+                          ),
+                          const SizedBox(width: 16), // Adiciona um espaço entre a imagem e o texto
+                          Expanded(
+                            child: const Text(
+                              'Login com Google',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: 18), // Define o tamanho da fonte
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 25), // Adiciona um espaço entre os botões
+                  SizedBox(
+                    width: 280, // Defina a largura desejada
+                    height: 48, // Defina a altura desejada
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        _signInAnonymously(context); // Chama o login anônimo
+                      },
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20), // Define o raio dos cantos
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Image.asset(
+                            'assets/images/anonimo_branco_maior_na_esquerda.png', // Insira o caminho para a sua imagem
+                            width: 36, // Defina a largura da imagem
+                            height: 36, // Defina a altura da imagem
+                          ),
+                          const SizedBox(width: 16), // Adiciona um espaço entre a imagem e o texto
+                          Expanded(
+                            child: const Text(
+                              'Login Anônimo',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: 18), // Define o tamanho da fonte
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
+
+
+
+
+
 }

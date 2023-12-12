@@ -138,9 +138,9 @@ class MyDrawer extends StatelessWidget {
           UserAccountsDrawerHeader(
             accountName: Text('$userName'),
             accountEmail: Text('$email'),
-            // currentAccountPicture: CircleAvatar(
-            //   backgroundImage: AssetImage('caminho_para_imagem.jpg'),
-            // ),
+            currentAccountPicture: CircleAvatar(
+              backgroundImage: AssetImage('assets/images/perfil_transparente_com_sombra.png'),
+            ),
           ),
           // ListTile(
           //   leading: Icon(Icons.home),
@@ -150,7 +150,7 @@ class MyDrawer extends StatelessWidget {
           //   },
           // ),
           ListTile(
-            leading: Icon(Icons.settings),
+            leading: Icon(Icons.auto_graph),
             title: Text('Simular juros compostos'),
             onTap: () {
               Navigator.of(context).push(
@@ -161,12 +161,45 @@ class MyDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.settings),
-            title: Text('Configurações'),
+            leading: Icon(Icons.text_snippet_rounded),
+            title: Text('Conteúdos sobre\nEducação Financeira'),
             onTap: () {
-              // Ação quando o item é selecionado
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => Conteudos(),
+                ),
+              );
             },
           ),
+          ListTile(
+            leading: Icon(Icons.attach_money_outlined),
+            title: Text('Doação ao projeto'),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => Doacao(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.contact_mail_rounded),
+            title: Text('Contatar Orientador Financeiro'),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => Orientador(),
+                ),
+              );
+            },
+          ),
+          // ListTile(
+          //   leading: Icon(Icons.settings),
+          //   title: Text('Configurações'),
+          //   onTap: () {
+          //     // Ação quando o item é selecionado
+          //   },
+          // ),
           Expanded(
             child: Padding(
               padding: EdgeInsets.only(bottom: 20), // Ajuste o valor conforme necessário

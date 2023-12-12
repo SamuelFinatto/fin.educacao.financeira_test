@@ -11,15 +11,15 @@ class _DoacaoState extends State<Doacao> {
   bool showSecondImage = false;
   bool showThirdImage = false;
 
-  Color buttonColor1 = Colors.green; // Cor inicial do primeiro botão
-  Color buttonColor2 = Colors.blue; // Cor inicial do segundo botão
-  Color buttonColor3 = Colors.blue; // Cor inicial do terceiro botão
+  Color? buttonColor1 = Colors.green[800]; // Cor inicial do primeiro botão
+  Color buttonColor2 = Colors.lightBlue; // Cor inicial do segundo botão
+  Color buttonColor3 = Colors.lightBlue; // Cor inicial do terceiro botão
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Voltar'),
+        title: Text('Doação Voluntária'),
         backgroundColor: Colors.green.shade800 // Defina a cor desejada para a barra superior desta tela
       ),
       body: Column(
