@@ -52,11 +52,22 @@ android {
         versionName flutterVersionName
     }
 
+    signingConfigs {
+        release {
+            storeFile file('C:\\Users\\Jordan\\AndroidStudioProjects\\moneysense\\my-release-key.keystore')
+            storePassword 'moneysense'
+            keyAlias 'my-release-key'
+            keyPassword 'moneysense'
+        }
+    }
+
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
+
+            //signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
         }
     }
 }

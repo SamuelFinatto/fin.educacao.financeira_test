@@ -109,7 +109,7 @@ class _JurosCompostosState extends State<JurosCompostos> {
     if(intervaloHorizontal == null || intervaloHorizontal == 0){
       intervaloHorizontal = 1;
     }
-    print('valorMaxY $valorMaxY');
+    //print('valorMaxY $valorMaxY');
     // print('teste $intervaloHorizontal');
     return Scaffold(
       appBar: AppBar(
