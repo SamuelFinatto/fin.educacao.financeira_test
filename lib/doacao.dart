@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
 
 class Doacao extends StatefulWidget {
   @override
@@ -11,9 +13,14 @@ class _DoacaoState extends State<Doacao> {
   bool showSecondImage = false;
   bool showThirdImage = false;
 
+  Color buttonColor0 = Colors.lightBlue; // Cor inicial do primeiro botão
   Color? buttonColor1 = Colors.green[800]; // Cor inicial do primeiro botão
   Color buttonColor2 = Colors.lightBlue; // Cor inicial do segundo botão
   Color buttonColor3 = Colors.lightBlue; // Cor inicial do terceiro botão
+
+  void copyToClipboard(String text) {
+    Clipboard.setData(ClipboardData(text: text));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +57,43 @@ class _DoacaoState extends State<Doacao> {
             ),
           ),
 
-          SizedBox(height: 10), // Espaço entre os botões e a imagem
+          SizedBox(height: 15), // Espaço entre os botões e a imagem
+
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start, // Alinha os elementos no início e no final
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      // Atualiza o estado dos botões e a cor do botão ativo
+                      showFirstImage = true;
+                      showSecondImage = false;
+                      showThirdImage = false;
+
+                      // Define a cor do botão ativo e mantém a cor padrão para os outros
+                      buttonColor1 = Colors.green;
+                      buttonColor2 = Colors.blue;
+                      buttonColor3 = Colors.blue;
+
+                      // Copia o texto para a área de transferência
+                      copyToClipboard('2b5d453f-eb70-4d29-a69b-8e577b9dc7f2');
+                    });
+                  },
+                  style: ElevatedButton.styleFrom(primary: buttonColor1),
+                  child: const Text(
+                    'Copiar chave PIX aleatória',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+
+
+          SizedBox(height: 20), // Espaço entre os botões e a imagem
           Center(
             child: showFirstImage
                 ? Image.asset(
@@ -71,7 +114,17 @@ class _DoacaoState extends State<Doacao> {
                       ),
           ),
 
-          SizedBox(height: 10), // Espaço entre os botões e a imagem
+
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.0),
+            child: Text(
+              '\nAlterar valor do QRCode:',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold, // Título em negrito
+              ),
+            ),
+          ),
 
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -88,6 +141,7 @@ class _DoacaoState extends State<Doacao> {
                     buttonColor1 = Colors.green;
                     buttonColor2 = Colors.blue;
                     buttonColor3 = Colors.blue;
+
                   });
                 },
                 style: ElevatedButton.styleFrom(primary: buttonColor1), // Cor do botão
@@ -139,31 +193,6 @@ class _DoacaoState extends State<Doacao> {
                 ),
               ),
             ],
-          ),
-
-
-          const SizedBox(height: 10),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.0),
-            child: Text(
-              'Desenvolvedores:',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold, // Título em negrito
-              ),
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.0),
-            child: Text(
-              '- Henrique Franceschini\n'
-              '- João Vitor Goergen Schonarth\n'
-              '- Jórdan Finatto',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
           ),
         ],
       ),

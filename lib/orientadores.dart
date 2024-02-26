@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'database.dart';
 
@@ -10,6 +11,8 @@ class Orientador extends StatefulWidget {
 
 class _OrientadorState extends State<Orientador> {
   late List<Map<String, dynamic>> orientadoresList = [];
+  late String documentId;
+  late String collectionName = 'orientadores'; // Nome da coleção pai
 
   @override
   void initState() {
@@ -17,25 +20,26 @@ class _OrientadorState extends State<Orientador> {
     _carregarOrientadores(); // Carregar os conteúdos ao iniciar a tela
   }
 
-  Future<void> _carregarOrientadores() async {
-    try {
-      var db = Database();
-      var telaDeOrientadores = await db.buscarDadosDosOrientadores();
-
-      setState(() {
-        orientadoresList = telaDeOrientadores.map((row) {
-          return {
-            'nome': row['nome'], // Ajuste conforme a estrutura do retorno da consulta
-            'telefone': row['telefone'], // Considerando que 'conteudo' é do tipo TEXT
-          };
-        }).toList();
-      });
-
-      await db.close();
-    } catch (e) {
-      print('Erro ao conectar ou executar a consulta: $e');
-    }
-  }
+  // conexão com banco de dados relacional
+  // Future<void> _carregarOrientadores() async {
+  //   try {
+  //     var db = Database();
+  //     var telaDeOrientadores = await db.buscarDadosDosOrientadores();
+  //
+  //     setState(() {
+  //       orientadoresList = telaDeOrientadores.map((row) {
+  //         return {
+  //           'nome': row['nome'], // Ajuste conforme a estrutura do retorno da consulta
+  //           'telefone': row['telefone'], // Considerando que 'conteudo' é do tipo TEXT
+  //         };
+  //       }).toList();
+  //     });
+  //
+  //     await db.close();
+  //   } catch (e) {
+  //     print('Erro ao conectar ou executar a consulta: $e');
+  //   }
+  // }
 
   Future<void> _abrirWhatsApp(String telefone) async {
     Uri url = Uri.parse('https://wa.me/$telefone');
@@ -44,6 +48,17 @@ class _OrientadorState extends State<Orientador> {
     } else {
       throw 'Não foi possível abrir o WhatsApp.';
     }
+  }
+
+  void _carregarOrientadores() {
+    FirebaseFirestore.instance.collection(collectionName)
+        .where('status', isEqualTo: true) // Filtra apenas os documentos com status verdadeiro
+        .snapshots()
+        .listen((snapshot) {
+      setState(() {
+        orientadoresList = snapshot.docs.map((doc) => doc.data()).toList();
+      });
+    });
   }
 
   List<Widget> _construirListaDeBotoes() {

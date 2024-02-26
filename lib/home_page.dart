@@ -3,6 +3,7 @@ import 'package:moneysense/doacao.dart';
 import 'conteudos.dart';
 import 'juros_compostos.dart';
 import 'orientadores.dart';
+import 'sobre.dart';
 
 
 class HomePage extends StatelessWidget {
@@ -99,7 +100,8 @@ class HomePage extends StatelessWidget {
               ),
               child: const Text('Contatar um\nOrientador Financeiro',
                 textAlign: TextAlign.center,),
-            ),
+            ),const SizedBox(height: 20),
+
             // Texto na parte superior da tela
             const Padding(
               padding: EdgeInsets.only(top: 30.0),
@@ -189,6 +191,17 @@ class MyDrawer extends StatelessWidget {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => Orientador(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.info_outline),
+            title: Text('Sobre'),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => Sobre(),
                 ),
               );
             },

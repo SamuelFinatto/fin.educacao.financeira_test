@@ -20,11 +20,13 @@ class MyApp extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.done) {
           // Se o Firebase foi inicializado com sucesso, vá para a página de login
           return MaterialApp(
+            debugShowCheckedModeBanner: false,
             home: LoginPage(),
           );
         } else if (snapshot.hasError) {
           // Se houver erro na inicialização, mostre uma mensagem de erro
           return MaterialApp(
+            debugShowCheckedModeBanner: false,
             home: Scaffold(
               body: Center(
                 child: Text('Erro na inicialização do Firebase: ${snapshot.error}'),
@@ -34,6 +36,7 @@ class MyApp extends StatelessWidget {
         } else {
           // Enquanto o Firebase está sendo inicializado, mostre um indicador de carregamento
           return MaterialApp(
+            debugShowCheckedModeBanner: false,
             home: Scaffold(
               body: Center(
                 child: CircularProgressIndicator(),

@@ -65,6 +65,8 @@ class _JurosCompostosState extends State<JurosCompostos> {
     double valorMinY = 0;
     double valorMaxY = 100;
     double valorMaxYaux = 0;
+    double valorAcumJuros = 0;
+    double valorAcumInvest = 0;
     String valorPeriodo = _controller4.text.isEmpty ? '1' : _controller4.text;
 
     if(_controller1.text.isNotEmpty && _controller2.text.isNotEmpty && _controller4.text.isNotEmpty){
@@ -94,6 +96,8 @@ class _JurosCompostosState extends State<JurosCompostos> {
 
       // int nextThousand = ((valorMaxY ~/ 1000) + 1) * 1000; // Próximo milhar
       // valorMaxY = nextThousand + (0 - (nextThousand % 5)); // Próximo milhar divisível por 5
+
+      valorAcumInvest = (double.tryParse(_controller2.text.replaceAll('.', '').replaceAll(',', '.').replaceAll('R\$', '')) ?? 0.0) * (_controller4.text.isEmpty ? 12 : double.parse(_controller4.text) * 12) + (double.parse(_controller1.text.replaceAll('.', '').replaceAll(',', '.').replaceAll('R\$', '')));
     }
 
     if (valorMaxY == null || valorMaxY < 100) {
@@ -132,7 +136,99 @@ class _JurosCompostosState extends State<JurosCompostos> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
 
+                  const SizedBox(height: 5),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 3.0),
+                    child: Row(
+                      children: [ // Espaçamento entre o texto e a linha horizontal
+                        Container(
+                          height: 5,
+                          width: 40, // Ajuste a largura da linha conforme necessário
+                          color: Colors.lightBlue,
+                        ),
+                        SizedBox(width: 10),
+                        Text(
+                          'Montante total:',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16, // Tamanho da fonte para o texto "Montante total"
+                          ),
+                        ),// Espaçamento entre a linha e o valor monetário
+                        SizedBox(width: 12),
+                        Text(
+                          'R\$${NumberFormat.currency(locale: 'pt_BR', symbol: '').format(valorMaxYaux)}', // Formata o valor para dinheiro BR
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 16, // Tamanho da fonte para o valor monetário
+                            color: Colors.black, // Cor do valor monetário
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
                   const SizedBox(height: 10),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 3.0),
+                    child: Row(
+                      children: [ // Espaçamento entre o texto e a linha horizontal
+                        Container(
+                          height: 5,
+                          width: 40, // Ajuste a largura da linha conforme necessário
+                          color: Colors.red,
+                        ),
+                        SizedBox(width: 10),
+                        Text(
+                          'Valor investido:',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16, // Tamanho da fonte para o valor monetário
+                          ),
+                        ),
+                        SizedBox(width: 11), // Espaçamento entre a linha e o valor monetário
+                        Text(
+                          'R\$${NumberFormat.currency(locale: 'pt_BR', symbol: '').format(valorAcumInvest)}', // Formata o valor para dinheiro BR
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 16, // Tamanho da fonte para o valor monetário
+                            color: Colors.black, // Cor do valor monetário
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 3.0),
+                    child: Row(
+                      children: [ // Espaçamento entre o texto e a linha horizontal
+                        Container(
+                          height: 5,
+                          width: 40, // Ajuste a largura da linha conforme necessário
+                          color: Colors.orange,
+                        ),
+                        SizedBox(width: 10),
+                        Text(
+                          'Valor dos juros:',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16, // Tamanho da fonte para o valor monetário
+                          ),
+                        ),
+                        SizedBox(width: 10), // Espaçamento entre a linha e o valor monetário
+                        Text(
+                          'R\$${NumberFormat.currency(locale: 'pt_BR', symbol: '').format(valorMaxYaux - valorAcumInvest)}', // Formata o valor para dinheiro BR
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 16, // Tamanho da fonte para o valor monetário
+                            color: Colors.black, // Cor do valor monetário
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 23),
 
                   // LINHA DO GRÁFICO
                   Row(
@@ -140,7 +236,7 @@ class _JurosCompostosState extends State<JurosCompostos> {
                     children: [
                       Expanded(
                         child: Container(
-                          height: 300, // Defina a altura do gráfico
+                          height: 220, // Defina a altura do gráfico
                           child: LineChart(
                             LineChartData(
                               minX: 0,
@@ -171,6 +267,7 @@ class _JurosCompostosState extends State<JurosCompostos> {
                                     reservedSize: 27,
                                     interval: (double.parse(valorPeriodo)*12)/6
                                 )),
+
                               ),
                               gridData: FlGridData(
                                 show: true,

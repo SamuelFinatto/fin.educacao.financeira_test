@@ -2,7 +2,7 @@ plugins {
     id "com.android.application"
     id "kotlin-android"
     id "dev.flutter.flutter-gradle-plugin"
-    id("com.google.gms.google-services")
+    id "com.google.gms.google-services"
 }
 
 def localProperties = new Properties()
@@ -15,12 +15,12 @@ if (localPropertiesFile.exists()) {
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
-    flutterVersionCode = '1'
+    flutterVersionCode = '2'
 }
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
-    flutterVersionName = '1.0'
+    flutterVersionName = '1.0.3'
 }
 
 android {
@@ -48,28 +48,35 @@ android {
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion flutter.minSdkVersion
         targetSdkVersion flutter.targetSdkVersion
+        multiDexEnabled true
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
 
+//    buildTypes {
+//        release {
+//            // TODO: Add your own signing config for the release build.
+//            // Signing with the debug keys for now, so `flutter run --release` works.
+//
+//            //signingConfig signingConfigs.debug
+//            signingConfig signingConfigs.release
+//        }
+//    }
+
     signingConfigs {
         release {
-            storeFile file('C:\\Users\\Jordan\\AndroidStudioProjects\\moneysense\\my-release-key.keystore')
-            storePassword 'moneysense'
-            keyAlias 'my-release-key'
-            keyPassword 'moneysense'
+            storeFile file('C:\\Users\\Jordan\\AndroidStudioProjects\\keystores\\upload-keystore.jks')
+            storePassword 'keystore'
+            keyAlias 'upload'
+            keyPassword 'upload'
         }
     }
-
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-
-            //signingConfig signingConfigs.debug
             signingConfig signingConfigs.release
         }
     }
+
 }
 
 flutter {
@@ -86,7 +93,7 @@ dependencies {
 
     // Also add the dependency for the Google Play services library and specify its version
     implementation("com.google.android.gms:play-services-auth:20.7.0")
-
+    implementation("androidx.multidex:multidex:2.0.1")
 }
 
 apply plugin: 'com.android.application'

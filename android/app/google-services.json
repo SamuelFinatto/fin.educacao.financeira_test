@@ -14,28 +14,28 @@
       },
       "oauth_client": [
         {
-          "client_id": "1050839018647-mmrgrcp1k6aqrjgqmf5pegobbt8k29eq.apps.googleusercontent.com",
+          "client_id": "1050839018647-od0atacgtjhnptu17ij7fonbk53peahe.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.moneysense",
-            "certificate_hash": "0a2a1c361a948ddd3e5da0a90f8b42db3dc1b7c7"
+            "certificate_hash": "b2a13c98601c94a68405348b4aac4b5a83a3e577"
           }
         },
         {
-          "client_id": "1050839018647-i9i855hl26dvacia3pqr4k9ff7qn6uki.apps.googleusercontent.com",
+          "client_id": "1050839018647-b8qhd7ckg7pekrbcood07lgh8gnoi12n.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCZO2jy3VFGeNUvjqrNgYnAQ9EysvJe6B0"
+          "current_key": "AIzaSyBwuG5AvuRZD6mmXThxLJD5YvUkjCu7WW4"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1050839018647-i9i855hl26dvacia3pqr4k9ff7qn6uki.apps.googleusercontent.com",
+              "client_id": "1050839018647-b8qhd7ckg7pekrbcood07lgh8gnoi12n.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

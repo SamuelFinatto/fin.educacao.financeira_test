@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="Money$ense"
+        android:label="MoneySense"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon"
         android:roundIcon="@mipmap/launcher_icon"> <!-- Ícone circular (adaptive) -->
