@@ -114,7 +114,7 @@ class LoginBody extends StatelessWidget {
             end: Alignment.bottomCenter,
             colors: [
               Color(0xFF08005E), // Cor inicial do gradiente
-              Color(0xFF4497FF), // Cor final do gradiente
+              Color(0xFF004FFF), // Cor final do gradiente
             ],
           ),
         ),
