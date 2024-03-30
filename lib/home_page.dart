@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:moneysense/doacao.dart';
+import 'package:fin/doacao.dart';
 import 'conteudos.dart';
 import 'juros_compostos.dart';
 import 'orientadores.dart';

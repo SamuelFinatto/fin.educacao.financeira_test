@@ -1,4 +1,4 @@
-package com.moneysense
+package com.fin
 
 import io.flutter.embedding.android.FlutterActivity
 

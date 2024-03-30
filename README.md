@@ -1,8 +1,8 @@
 <<<<<<< HEAD
-# moneysensemobile
+# finmobile
 PROJETO INTEGRADOR III
 =======
-# moneysense
+# fin
 
 A new Flutter project.
 

@@ -113,8 +113,8 @@ class LoginBody extends StatelessWidget {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color(0xFF002B64), // Cor inicial do gradiente
-              Color(0xFF509EFF), // Cor final do gradiente
+              Color(0xFF08005E), // Cor inicial do gradiente
+              Color(0xFF4497FF), // Cor final do gradiente
             ],
           ),
         ),
@@ -128,7 +128,7 @@ class LoginBody extends StatelessWidget {
                 alignment: Alignment.center,
                 height: 200, // Defina a altura desejada para a imagem
                 child: Image.asset(
-                  'assets/images/logo_transparente_com_sombra.png', // Insira o caminho para a sua imagem
+                  'assets/images/logo_fin.png', // Insira o caminho para a sua imagem
                   fit: BoxFit.contain, // Ajuste para o tipo de redimensionamento desejado
                 ),
               ),
@@ -211,9 +211,4 @@ class LoginBody extends StatelessWidget {
       ),
     );
   }
-
-
-
-
-
 }
