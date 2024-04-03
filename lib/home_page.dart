@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:fin/doacao.dart';
+import 'package:fin.educacao.financeira/doacao.dart';
 import 'conteudos.dart';
 import 'juros_compostos.dart';
 import 'orientadores.dart';
 import 'sobre.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 
 class HomePage extends StatelessWidget {
@@ -12,6 +13,15 @@ class HomePage extends StatelessWidget {
   final Function(BuildContext) signOut; // Modifique o tipo da função para aceitar uma função assíncrona
 
   const HomePage(this.userName, this.email, this.signOut);
+
+  // Método para abrir a URL no navegador
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Não foi possível abrir a URL $url';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +96,21 @@ class HomePage extends StatelessWidget {
               ),
               child: const Text('Doação ao projeto'),
             ),
+
             const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                _launchURL('https://www.serasa.com.br/score/');
+              },
+              style: ElevatedButton.styleFrom(
+                textStyle: const TextStyle(fontSize: 18),
+                fixedSize: const Size(250,70), // Ajuste a largura e altura do botão respectivamente
+              ),
+              child: const Text('Consultar Score',
+                textAlign: TextAlign.center,),
+            ),
+            const SizedBox(height: 20),
+
             ElevatedButton(
               onPressed: () async {
                 Navigator.push(

@@ -1,8 +1,8 @@
 <<<<<<< HEAD
-# finmobile
+# fin.educacao.financeira
 PROJETO INTEGRADOR III
 =======
-# fin
+# fin.educacao.financeira
 
 A new Flutter project.
 

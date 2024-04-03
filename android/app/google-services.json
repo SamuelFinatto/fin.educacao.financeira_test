@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:320615924064:android:d0ac92edca403811a35e05",
         "android_client_info": {
-          "package_name": "com.fin"
+          "package_name": "com.fin.educacao.financeira"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "320615924064-dqqlc945k3lcmof2tn7fti99vgsol7u2.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.fin",
+            "package_name": "com.fin.educacao.financeira",
             "certificate_hash": "0a2a1c361a948ddd3e5da0a90f8b42db3dc1b7c7"
           }
         },
@@ -25,7 +25,7 @@
           "client_id": "320615924064-k0gtbr208pvgh37psj97hjqkb77nrvmd.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.fin",
+            "package_name": "com.fin.educacao.financeira",
             "certificate_hash": "b2a13c98601c94a68405348b4aac4b5a83a3e577"
           }
         },
