@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Conteudos extends StatefulWidget {
+class Glossario extends StatefulWidget {
   @override
-  _ConteudosState createState() => _ConteudosState();
+  _GlossariosState createState() => _GlossariosState();
 }
 
-class _ConteudosState extends State<Conteudos> {
+class _GlossariosState extends State<Glossario> {
   late String documentId;
-  late String collectionName = 'conteudo'; // Nome da coleção pai
+  late String collectionName = 'glossario'; // Nome da coleção pai
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Conteúdos'),
+        title: const Text('Glossário'),
         backgroundColor: Colors.green.shade800,
       ),
       body: StreamBuilder(
@@ -89,7 +89,7 @@ class MyExpansionTile extends StatelessWidget {
                 child: Column(
                   children: [
                     StreamBuilder(
-                      stream: FirebaseFirestore.instance.collection('conteudo').doc(documentId).collection('subconteudo').orderBy('titulo').snapshots(),
+                      stream: FirebaseFirestore.instance.collection('glossario').doc(documentId).collection('subconteudo').orderBy('titulo').snapshots(),
                       builder: (context, subSnapshot) {
                         if (subSnapshot.hasError) {
                           return Text('Erro: ${subSnapshot.error}');
