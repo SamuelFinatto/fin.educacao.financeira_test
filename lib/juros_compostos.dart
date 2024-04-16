@@ -241,7 +241,10 @@ class _JurosCompostosState extends State<JurosCompostos> {
                     children: [
                       Expanded(
                         child: Container(
+                          margin: EdgeInsets.only(right: 13), // Margem de 10 pixels do lado direito
                           height: 220, // Defina a altura do gráfico
+                          child: AbsorbPointer(
+                            absorbing: true, // Defina como true para desativar os eventos de toque
                           child: LineChart(
                             LineChartData(
                               minX: 0,
@@ -294,6 +297,7 @@ class _JurosCompostosState extends State<JurosCompostos> {
                                 },
                               ),
                             ),
+                          ),
                           ),
                         ),
                       ),
@@ -506,7 +510,7 @@ class _JurosCompostosState extends State<JurosCompostos> {
     color: Colors.lightBlue,
     barWidth: 3,
     isStrokeCapRound: true,
-    dotData: const FlDotData(show: false),
+    dotData: FlDotData(show: false),
     belowBarData: BarAreaData(show: false),
     spots: _calculateSpotsDinheiroAcumulado(_controller3.text.isEmpty ? 0.0 : (double.parse(_controller3.text))/100),
   );
@@ -516,7 +520,7 @@ class _JurosCompostosState extends State<JurosCompostos> {
     color: Colors.orange,
     barWidth: 3,
     isStrokeCapRound: true,
-    dotData: const FlDotData(show: false),
+    dotData: FlDotData(show: false),
     belowBarData: BarAreaData(show: false),
     spots: _calculateSpotsTotalJuros(_controller3.text.isEmpty ? 0.0 : (double.parse(_controller3.text))/100),
   );
@@ -526,7 +530,7 @@ class _JurosCompostosState extends State<JurosCompostos> {
     color: Colors.red,
     barWidth: 3,
     isStrokeCapRound: true,
-    dotData: const FlDotData(show: false),
+    dotData: FlDotData(show: false),
     belowBarData: BarAreaData(show: false),
     spots: _calculateSpotsDinheiroInvestido(_controller3.text.isEmpty ? 0.0 : (double.parse(_controller3.text))/100),
   );

@@ -141,68 +141,144 @@ class LoginBody extends StatelessWidget {
                   SizedBox(
                     width: 280, // Defina a largura desejada
                     height: 48, // Defina a altura desejada
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        _navigateToHomePage(context); // Navega para a HomePage
-                      },
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20), // Define o raio dos cantos
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Image.asset(
-                            'assets/images/google_com_fundo.png', // Insira o caminho para a sua imagem
-                            width: 39, // Defina a largura da imagem
-                            height: 39, // Defina a altura da imagem
+                    child: Material(
+                      borderRadius: BorderRadius.circular(17), // Define o raio dos cantos
+                      color: Colors.transparent, // Torna o Material transparente para permitir o gradiente de fundo
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(17), // Define o raio dos cantos
+                        onTap: () async {
+                          _navigateToHomePage(context); // Navega para a HomePage
+                        },
+                        splashColor: Colors.white.withOpacity(0.5), // Define a cor do efeito de toque
+                        highlightColor: Colors.transparent, // Define a cor de destaque como transparente para remover a cor padrão
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [Color(0xFF080075), Color(0xFF0045CC)], // Cores do gradiente
+                              begin: Alignment.centerLeft, // Início do gradiente à esquerda
+                              end: Alignment.centerRight, // Fim do gradiente à direita
+                            ),
+                            borderRadius: BorderRadius.circular(17), // Define o raio dos cantos
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.4), // Cor da sombra
+                                spreadRadius: 2, // Espalhamento da sombra
+                                blurRadius: 5, // Desfoque da sombra
+                                offset: Offset(0, 0), // Deslocamento da sombra
+                              ),
+                            ],
                           ),
-                          const SizedBox(width: 16), // Adiciona um espaço entre a imagem e o texto
-                          Expanded(
-                            child: const Text(
-                              'Login com Google',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(fontSize: 18), // Define o tamanho da fonte
+                          child: Material( // Adicione um Material dentro do InkWell para exibir o efeito de toque
+                            type: MaterialType.transparency, // Torna o Material transparente
+                            borderRadius: BorderRadius.circular(17), // Define o raio dos cantos
+                            child: InkWell( // Adicione um novo InkWell para exibir o efeito de toque
+                              onTap: () async {
+                                _navigateToHomePage(context); // Navega para a HomePage
+                              },
+                              borderRadius: BorderRadius.circular(17), // Define o raio dos cantos
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 25), // Adicione um padding horizontal
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/google_com_fundo.png', // Insira o caminho para a sua imagem
+                                      width: 35, // Defina a largura da imagem
+                                      height: 35, // Defina a altura da imagem
+                                    ),
+                                    const SizedBox(width: 16), // Adiciona um espaço entre a imagem e o texto
+                                    Expanded(
+                                      child: const Text(
+                                        'Login com Google',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.white, // Define a cor do texto como branco
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
-                        ],
+                        ),
                       ),
                     ),
                   ),
+
+
                   SizedBox(height: 25), // Adiciona um espaço entre os botões
+
                   SizedBox(
                     width: 280, // Defina a largura desejada
                     height: 48, // Defina a altura desejada
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        _signInAnonymously(context); // Chama o login anônimo
-                      },
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20), // Define o raio dos cantos
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Image.asset(
-                            'assets/images/anonimo_branco_maior_na_esquerda.png', // Insira o caminho para a sua imagem
-                            width: 36, // Defina a largura da imagem
-                            height: 36, // Defina a altura da imagem
+                    child: Material(
+                      borderRadius: BorderRadius.circular(17), // Define o raio dos cantos
+                      color: Colors.transparent, // Torna o Material transparente para permitir o gradiente de fundo
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(17), // Define o raio dos cantos
+                        onTap: () async {
+                          _signInAnonymously(context); // Navega para a HomePage
+                        },
+                        splashColor: Colors.white.withOpacity(0.5), // Define a cor do efeito de toque
+                        highlightColor: Colors.transparent, // Define a cor de destaque como transparente para remover a cor padrão
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [Color(0xFF080075), Color(0xFF0045CC)], // Cores do gradiente
+                              begin: Alignment.centerLeft, // Início do gradiente à esquerda
+                              end: Alignment.centerRight, // Fim do gradiente à direita
+                            ),
+                            borderRadius: BorderRadius.circular(17), // Define o raio dos cantos
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.4), // Cor da sombra
+                                spreadRadius: 2, // Espalhamento da sombra
+                                blurRadius: 5, // Desfoque da sombra
+                                offset: Offset(0, 0), // Deslocamento da sombra
+                              ),
+                            ],
                           ),
-                          const SizedBox(width: 16), // Adiciona um espaço entre a imagem e o texto
-                          Expanded(
-                            child: const Text(
-                              'Login Anônimo',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(fontSize: 18), // Define o tamanho da fonte
+                          child: Material( // Adicione um Material dentro do InkWell para exibir o efeito de toque
+                            type: MaterialType.transparency, // Torna o Material transparente
+                            borderRadius: BorderRadius.circular(17), // Define o raio dos cantos
+                            child: InkWell( // Adicione um novo InkWell para exibir o efeito de toque
+                              onTap: () async {
+                                _signInAnonymously(context); // Navega para a HomePage
+                              },
+                              borderRadius: BorderRadius.circular(17), // Define o raio dos cantos
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 25), // Adicione um padding horizontal
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/anonimo_branco_maior_na_esquerda.png', // Insira o caminho para a sua imagem
+                                      width: 36, // Defina a largura da imagem
+                                      height: 36, // Defina a altura da imagem
+                                    ),
+                                    const SizedBox(width: 16), // Adiciona um espaço entre a imagem e o texto
+                                    Expanded(
+                                      child: const Text(
+                                        'Login Anônimo',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.white, // Define a cor do texto como branco
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
-                        ],
+                        ),
                       ),
                     ),
                   ),
+
                 ],
               ),
             ),
