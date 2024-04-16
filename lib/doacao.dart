@@ -13,8 +13,9 @@ class _DoacaoState extends State<Doacao> {
   bool showSecondImage = false;
   bool showThirdImage = false;
 
+  Color buttonColorChaveAleatoria = Colors.lightBlue; // Cor inicial do primeiro botão
   Color buttonColor0 = Colors.lightBlue; // Cor inicial do primeiro botão
-  Color? buttonColor1 = Colors.green[800]; // Cor inicial do primeiro botão
+  Color buttonColor1 = Colors.green; // Cor inicial do primeiro botão
   Color buttonColor2 = Colors.lightBlue; // Cor inicial do segundo botão
   Color buttonColor3 = Colors.lightBlue; // Cor inicial do terceiro botão
 
@@ -67,21 +68,14 @@ class _DoacaoState extends State<Doacao> {
                 ElevatedButton(
                   onPressed: () {
                     setState(() {
-                      // Atualiza o estado dos botões e a cor do botão ativo
-                      showFirstImage = true;
-                      showSecondImage = false;
-                      showThirdImage = false;
-
                       // Define a cor do botão ativo e mantém a cor padrão para os outros
-                      buttonColor1 = Colors.green;
-                      buttonColor2 = Colors.blue;
-                      buttonColor3 = Colors.blue;
+                      buttonColorChaveAleatoria = Colors.green;
 
                       // Copia o texto para a área de transferência
-                      copyToClipboard('2b5d453f-eb70-4d29-a69b-8e577b9dc7f2');
+                      copyToClipboard('52b22219-8ef1-4472-bd25-a4f5a16ff88d');
                     });
                   },
-                  style: ElevatedButton.styleFrom(primary: buttonColor1),
+                  style: ElevatedButton.styleFrom(primary: buttonColorChaveAleatoria),
                   child: const Text(
                     'Copiar chave PIX aleatória',
                     style: TextStyle(fontSize: 18),

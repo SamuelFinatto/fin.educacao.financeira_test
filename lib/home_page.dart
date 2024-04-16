@@ -31,6 +31,7 @@ class HomePage extends StatelessWidget {
           backgroundColor: Colors.green.shade800 // Defina a cor desejada para a barra superior desta tela
       ),
       drawer: MyDrawer(signOut, userName, email, _launchURL), // Crie o Drawer como um widget separado
+      backgroundColor: Colors.white, // Cor de fundo da tela
       body: SingleChildScrollView(
         child: Center(
           child: Column(
@@ -50,82 +51,230 @@ class HomePage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 50), // Espaçamento entre o texto e os botões
-              ElevatedButton(
-                onPressed: () async {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => JurosCompostos()),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  textStyle: const TextStyle(fontSize: 18),
-                  fixedSize: const Size(250,70), // Ajuste a largura e altura do botão respectivamente
+
+
+              Ink(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Color(0xFF1000D3), Color(0xFF1A6BFF)], // Cores base do gradiente
+                    begin: Alignment.topCenter, // Início do gradiente (cima)
+                    end: Alignment.bottomCenter, // Fim do gradiente (baixo)
+                  ),
+                  borderRadius: BorderRadius.circular(8), // Adicione bordas arredondadas conforme necessário
                 ),
-                child: const Text(
-                  'Simular juros compostos',
-                  textAlign: TextAlign.center,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => JurosCompostos()),
+                    );
+                  },
+                  child: Container(
+                    width: 250,
+                    height: 70,
+                    alignment: Alignment.center,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.auto_graph, // Ícone de gráfico automático
+                          color: Colors.white, // Cor do ícone
+                        ),
+                        SizedBox(width: 15), // Espaçamento entre o ícone e o texto
+                        Text(
+                          'Simular juros\ncompostos',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white, // Cor do texto branca para melhor contraste
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
+
+
               const SizedBox(height: 20), // Espaçamento entre os botões
-              ElevatedButton(
-                onPressed: () async {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Glossario()),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  textStyle: TextStyle(fontSize: 18),
-                  fixedSize: const Size(250,70), // Ajuste a largura e altura do botão respectivamente
+
+              Ink(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Color(0xFF1000D3), Color(0xFF1A6BFF)], // Cores base do gradiente
+                    begin: Alignment.topCenter, // Início do gradiente (cima)
+                    end: Alignment.bottomCenter, // Fim do gradiente (baixo)
+                  ),
+                  borderRadius: BorderRadius.circular(8), // Adicione bordas arredondadas conforme necessário
                 ),
-                child: const Text(
-                  'Glossário sobre\nEducação Financeira',
-                  textAlign: TextAlign.center,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Glossario()),
+                    );
+                  },
+                  child: Container(
+                    width: 250,
+                    height: 70,
+                    alignment: Alignment.center,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.text_snippet_outlined, // Ícone de snippet de texto
+                          color: Colors.white, // Cor do ícone
+                        ),
+                        SizedBox(width: 15), // Espaçamento entre o ícone e o texto
+                        Text(
+                          'Glossário sobre\nEducação Financeira',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white, // Cor do texto branca para melhor contraste
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
+
+
               const SizedBox(height: 20), // Espaçamento entre os botões // Espaçamento entre os botões
-              ElevatedButton(
-                onPressed: () async {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Doacao()),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  textStyle: const TextStyle(fontSize: 18),
-                  fixedSize: const Size(250,70), // Ajuste a largura e altura do botão respectivamente
+
+              Ink(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Color(0xFF1000D3), Color(0xFF1A6BFF)], // Cores base do gradiente
+                    begin: Alignment.topCenter, // Início do gradiente (cima)
+                    end: Alignment.bottomCenter, // Fim do gradiente (baixo)
+                  ),
+                  borderRadius: BorderRadius.circular(8), // Adicione bordas arredondadas conforme necessário
                 ),
-                child: const Text('Doação ao projeto'),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Doacao()),
+                    );
+                  },
+                  child: Container(
+                    width: 250,
+                    height: 70,
+                    alignment: Alignment.center,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.attach_money_outlined, // Ícone de dinheiro
+                          color: Colors.white, // Cor do ícone
+                        ),
+                        SizedBox(width: 10), // Espaçamento entre o ícone e o texto
+                        Text(
+                          'Doação ao projeto',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white, // Cor do texto branca para melhor contraste
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
 
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  _launchURL('https://www.serasa.com.br/score/');
-                },
-                style: ElevatedButton.styleFrom(
-                  textStyle: const TextStyle(fontSize: 18),
-                  fixedSize: const Size(250,70), // Ajuste a largura e altura do botão respectivamente
-                ),
-                child: const Text('Consultar Score',
-                  textAlign: TextAlign.center,),
-              ),
+
               const SizedBox(height: 20),
 
-              ElevatedButton(
-                onPressed: () async {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Orientador()),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  textStyle: const TextStyle(fontSize: 18),
-                  fixedSize: const Size(250,70), // Ajuste a largura e altura do botão respectivamente
+              Ink(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Color(0xFF1000D3), Color(0xFF1A6BFF)], // Cores base do gradiente
+                    begin: Alignment.topCenter, // Início do gradiente (cima)
+                    end: Alignment.bottomCenter, // Fim do gradiente (baixo)
+                  ),
+                  borderRadius: BorderRadius.circular(8), // Adicione bordas arredondadas conforme necessário
                 ),
-                child: const Text('Contatar um\nOrientador Financeiro',
-                  textAlign: TextAlign.center,),
-              ),const SizedBox(height: 20),
+                child: InkWell(
+                  onTap: () {
+                    _launchURL('https://www.serasa.com.br/score/');
+                  },
+                  child: Container(
+                    width: 250,
+                    height: 70,
+                    alignment: Alignment.center,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.add_chart_outlined, // Ícone de pontuação, você pode alterar para o ícone desejado
+                          color: Colors.white, // Cor do ícone
+                        ),
+                        SizedBox(width: 15), // Espaçamento entre o ícone e o texto
+                        Text(
+                          'Consultar Score',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white, // Cor do texto branca para melhor contraste
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+
+              const SizedBox(height: 20),
+
+              Ink(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Color(0xFF1000D3),Color(0xFF1A6BFF)], // Cores base do gradiente
+                    begin: Alignment.topCenter, // Início do gradiente (cima)
+                    end: Alignment.bottomCenter, // Fim do gradiente (baixo)
+                  ),
+                  borderRadius: BorderRadius.circular(8), // Adicione bordas arredondadas conforme necessário
+                ),
+                child: InkWell(
+                  onTap: () async {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Orientador()),
+                    );
+                  },
+                  child: Container(
+                    width: 250,
+                    height: 70,
+                    alignment: Alignment.center,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.person_add_outlined, // Ícone de uma pessoa, você pode mudar para o ícone desejado
+                          color: Colors.white, // Cor do ícone
+                        ),
+                        SizedBox(width: 15), // Espaçamento entre o ícone e o texto
+                        Text(
+                          'Contatar um\nOrientador Financeiro',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white, // Cor do texto branca para melhor contraste
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+
+
+              const SizedBox(height: 20),
 
               // Texto na parte inferior da tela
               Padding(
@@ -192,7 +341,7 @@ class MyDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.text_snippet_rounded),
+            leading: Icon(Icons.text_snippet_outlined),
             title: Text('Glossário sobre\nEducação Financeira'),
             onTap: () {
               Navigator.of(context).push(
@@ -214,14 +363,14 @@ class MyDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.add_chart),
+            leading: Icon(Icons.add_chart_outlined),
             title: Text('Consultar Score'),
             onTap: () {
               launchURL('https://www.serasa.com.br/score/');
             },
           ),
           ListTile(
-            leading: Icon(Icons.contact_mail_rounded),
+            leading: Icon(Icons.person_add_outlined),
             title: Text('Contatar Orientador Financeiro'),
             onTap: () {
               Navigator.of(context).push(

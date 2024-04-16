@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -17,6 +16,10 @@ class _JurosCompostosState extends State<JurosCompostos> {
   final TextEditingController _controller4 = TextEditingController();
 
   final NumberFormat _currencyFormat = NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$');
+
+  final FocusNode _valorMensalFocusNode = FocusNode();
+  final FocusNode _jurosFocusNode = FocusNode();
+  final FocusNode _periodoFocusNode = FocusNode();
 
   String formatCurrency(String value) {
     final cleanValue = value.replaceAll(RegExp(r'[^\d]'), '');
@@ -68,6 +71,7 @@ class _JurosCompostosState extends State<JurosCompostos> {
     double valorAcumJuros = 0;
     double valorAcumInvest = 0;
     String valorPeriodo = _controller4.text.isEmpty ? '1' : _controller4.text;
+    double keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
 
     if(_controller1.text.isNotEmpty && _controller2.text.isNotEmpty && _controller4.text.isNotEmpty){
       valorMaxYaux = (calculateFinalCompoundInterest(_controller1.text.isEmpty ? 0 : double.parse(_controller1.text.replaceAll('.', '').replaceAll(',', '.').replaceAll('R\$', '')),
@@ -115,21 +119,22 @@ class _JurosCompostosState extends State<JurosCompostos> {
     }
     //print('valorMaxY $valorMaxY');
     // print('teste $intervaloHorizontal');
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Simular Juros Compostos'),
         backgroundColor: Colors.green.shade800 // Defina a cor desejada para a barra superior desta tela
       ),
     body: SingleChildScrollView(
-    child: Container(
-    height: MediaQuery.of(context).size.height + 50, // Define a altura do Container
-    child: Stack(
-    children: <Widget>[
+      //child: Container(
+        //height: MediaQuery.of(context).size.height - 180, // Define a altura do Container
+        //child: Stack(
+        //children: <Widget>[
           // Aqui pode adicionar o restante do conteúdo abaixo do texto
-          Positioned(
-            top: 0, // Altura abaixo do texto principal
-            left: 0,
-            right: 15,
+          //Positioned(
+            //top: 0, // Altura abaixo do texto principal
+            //left: 0,
+            //right: 15,
             child: Container(
               padding: const EdgeInsets.all(15.0),
               child: Column(
@@ -317,6 +322,11 @@ class _JurosCompostosState extends State<JurosCompostos> {
                             LengthLimitingTextInputFormatter(9),
                           ],
                           style: const TextStyle(fontSize: 18),
+                          onFieldSubmitted: (_) {
+                            // Quando o campo "Valor inicial" for submetido (pressão do botão "Enter"),
+                            // defina o foco para o campo "Valor mensal"
+                            FocusScope.of(context).requestFocus(_valorMensalFocusNode);
+                          },
                           onChanged: (value) {
                             final formatted = formatCurrency(value);
                             final newCursorPosition = formatted.length;
@@ -358,6 +368,10 @@ class _JurosCompostosState extends State<JurosCompostos> {
                             LengthLimitingTextInputFormatter(8),
                           ],
                           style: const TextStyle(fontSize: 18),
+                          focusNode: _valorMensalFocusNode,
+                          onFieldSubmitted: (_) {
+                            FocusScope.of(context).requestFocus(_jurosFocusNode);
+                          },
                           onChanged: (value) {
                             final formatted = formatCurrency(value);
                             final newCursorPosition = formatted.length;
@@ -399,6 +413,10 @@ class _JurosCompostosState extends State<JurosCompostos> {
                             LengthLimitingTextInputFormatter(4),
                           ],
                           style: const TextStyle(fontSize: 18),
+                          focusNode: _jurosFocusNode,
+                          onFieldSubmitted: (_) {
+                            FocusScope.of(context).requestFocus(_periodoFocusNode);
+                          },
                           onChanged: (value) {
                             final formatted = formatPercentage(value);
                             final newCursorPosition = formatted.length;
@@ -439,14 +457,16 @@ class _JurosCompostosState extends State<JurosCompostos> {
                           keyboardType: TextInputType.number,
                           inputFormatters: <TextInputFormatter>[
                             FilteringTextInputFormatter.digitsOnly,
-                            LengthLimitingTextInputFormatter(1),
+                            LengthLimitingTextInputFormatter(2),
                           ],
                           style: const TextStyle(fontSize: 18),
+                          focusNode: _periodoFocusNode,
                           onChanged: (value) {
-                            if (value.isNotEmpty && int.parse(value) == 0) {
-                              setState(() {
-                                _controller4.text =''; // Limpa o campo se zero for digitado
-                              });
+                            if (value.isNotEmpty && (int.parse(value) < 1 || int.parse(value) > 40) ) {
+                                // Se o valor digitado estiver fora do intervalo desejado, defina-o para o limite mais próximo
+                                setState(() {
+                                  _controller4.text = (int.parse(value) < 1) ? '1' : '40';
+                                });
                             } else {
                               final formatted = formatInteger(value);
                               final newCursorPosition = formatted.length;
@@ -474,10 +494,10 @@ class _JurosCompostosState extends State<JurosCompostos> {
               ),
             ),
           ),
-        ],
-      ),
-    ),
-    ),
+        //],
+      //),
+    //),
+    //),
     );
   }
 
