@@ -140,52 +140,6 @@ class HomePage extends StatelessWidget {
                 ),
               ),
 
-
-              const SizedBox(height: 20), // Espaçamento entre os botões // Espaçamento entre os botões
-
-              Ink(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Color(0xFF1000D3), Color(0xFF1A6BFF)], // Cores base do gradiente
-                    begin: Alignment.topCenter, // Início do gradiente (cima)
-                    end: Alignment.bottomCenter, // Fim do gradiente (baixo)
-                  ),
-                  borderRadius: BorderRadius.circular(8), // Adicione bordas arredondadas conforme necessário
-                ),
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Doacao()),
-                    );
-                  },
-                  child: Container(
-                    width: 250,
-                    height: 70,
-                    alignment: Alignment.center,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.attach_money_outlined, // Ícone de dinheiro
-                          color: Colors.white, // Cor do ícone
-                        ),
-                        SizedBox(width: 10), // Espaçamento entre o ícone e o texto
-                        Text(
-                          'Doação ao projeto',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white, // Cor do texto branca para melhor contraste
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-
-
               const SizedBox(height: 20),
 
               Ink(
@@ -273,6 +227,49 @@ class HomePage extends StatelessWidget {
               ),
 
 
+              const SizedBox(height: 20), // Espaçamento entre os botões // Espaçamento entre os botões
+
+              Ink(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Color(0xFF1000D3), Color(0xFF1A6BFF)], // Cores base do gradiente
+                    begin: Alignment.topCenter, // Início do gradiente (cima)
+                    end: Alignment.bottomCenter, // Fim do gradiente (baixo)
+                  ),
+                  borderRadius: BorderRadius.circular(8), // Adicione bordas arredondadas conforme necessário
+                ),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Doacao()),
+                    );
+                  },
+                  child: Container(
+                    width: 250,
+                    height: 70,
+                    alignment: Alignment.center,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.attach_money_outlined, // Ícone de dinheiro
+                          color: Colors.white, // Cor do ícone
+                        ),
+                        SizedBox(width: 10), // Espaçamento entre o ícone e o texto
+                        Text(
+                          'Doação ao projeto',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white, // Cor do texto branca para melhor contraste
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
 
               const SizedBox(height: 20),
 
@@ -315,13 +312,27 @@ class MyDrawer extends StatelessWidget {
     return Drawer(
       child: Column(
         children: <Widget>[
-          UserAccountsDrawerHeader(
-            accountName: Text('$userName'),
-            accountEmail: Text('$email'),
-            currentAccountPicture: CircleAvatar(
-              backgroundImage: AssetImage('assets/images/perfil_transparente_com_sombra.png'),
+          SizedBox(
+            height: 120, // Define a altura desejada para o UserAccountsDrawerHeader
+            child: UserAccountsDrawerHeader(
+              accountName: Text(
+                '$userName',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold, // Define o estilo para negrito
+                  fontSize: 16, // Define o tamanho da fonte para 16
+                ),
+              ),
+              accountEmail: Text('$email'),
+              // currentAccountPicture: CircleAvatar(
+              //   backgroundImage: AssetImage('assets/images/perfil_transparente_com_sombra.png'),
+              // ),
+              decoration: BoxDecoration(
+                color: Colors.green.shade800, // Define a cor de fundo como azul
+              ),
             ),
           ),
+
+
           // ListTile(
           //   leading: Icon(Icons.home),
           //   title: Text('Login'),
@@ -330,8 +341,6 @@ class MyDrawer extends StatelessWidget {
           //   },
           // ),
           ListTile(
-            leading: Icon(Icons.auto_graph),
-            title: Text('Simular juros compostos'),
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
@@ -339,10 +348,16 @@ class MyDrawer extends StatelessWidget {
                 ),
               );
             },
+            title: Row(
+              children: [
+                Icon(Icons.auto_graph),
+                SizedBox(width: 17), // Espaço entre o ícone e o texto
+                Text('Simular juros compostos'),
+              ],
+            ),
           ),
+
           ListTile(
-            leading: Icon(Icons.text_snippet_outlined),
-            title: Text('Glossário sobre\nEducação Financeira'),
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
@@ -350,10 +365,15 @@ class MyDrawer extends StatelessWidget {
                 ),
               );
             },
+            title: Row(
+              children: [
+                Icon(Icons.text_snippet_outlined),
+                SizedBox(width: 17), // Espaço entre o ícone e o texto
+                Text('Glossário sobre\nEducação Financeira'),
+              ],
+            ),
           ),
           ListTile(
-            leading: Icon(Icons.attach_money_outlined),
-            title: Text('Doação ao projeto'),
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
@@ -361,17 +381,27 @@ class MyDrawer extends StatelessWidget {
                 ),
               );
             },
+            title: Row(
+              children: [
+                Icon(Icons.attach_money_outlined),
+                SizedBox(width: 17), // Espaço entre o ícone e o texto
+                Text('Doação ao projeto'),
+              ],
+            ),
           ),
           ListTile(
-            leading: Icon(Icons.add_chart_outlined),
-            title: Text('Consultar Score'),
             onTap: () {
               launchURL('https://www.serasa.com.br/score/');
             },
+            title: Row(
+              children: [
+                Icon(Icons.add_chart_outlined),
+                SizedBox(width: 17), // Espaço entre o ícone e o texto
+                Text('Consultar Score'),
+              ],
+            ),
           ),
           ListTile(
-            leading: Icon(Icons.person_add_outlined),
-            title: Text('Contatar Orientador Financeiro'),
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
@@ -379,10 +409,15 @@ class MyDrawer extends StatelessWidget {
                 ),
               );
             },
+            title: Row(
+              children: [
+                Icon(Icons.person_add_outlined),
+                SizedBox(width: 17), // Espaço entre o ícone e o texto
+                Text('Contatar Orientador Financeiro'),
+              ],
+            ),
           ),
           ListTile(
-            leading: Icon(Icons.info_outline),
-            title: Text('Sobre'),
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
@@ -390,7 +425,15 @@ class MyDrawer extends StatelessWidget {
                 ),
               );
             },
+            title: Row(
+              children: [
+                Icon(Icons.info_outline),
+                SizedBox(width: 17), // Espaço entre o ícone e o texto
+                Text('Sobre'),
+              ],
+            ),
           ),
+
           // ListTile(
           //   leading: Icon(Icons.settings),
           //   title: Text('Configurações'),
@@ -400,19 +443,75 @@ class MyDrawer extends StatelessWidget {
           // ),
           Expanded(
             child: Padding(
-              padding: EdgeInsets.only(bottom: 20), // Ajuste o valor conforme necessário
+              padding: EdgeInsets.only(bottom: 30, left: 10, right: 165), // Adicionando padding nos lados esquerdo e direito
               child: Align(
                 alignment: Alignment.bottomCenter,
-                child: ListTile(
-                  leading: Icon(Icons.exit_to_app),
-                  title: Text('Sair'),
-                  onTap: () {
-                    onSignOut(context); // Chame a função de sign out
-                  },
+                child: Material(
+                  borderRadius: BorderRadius.circular(17), // Define o raio dos cantos
+                  color: Colors.transparent, // Torna o Material transparente para permitir o gradiente de fundo
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(17), // Define o raio dos cantos
+                    onTap: () {
+                      onSignOut(context); // Chame a função de sign out
+                    },
+                    splashColor: Colors.white.withOpacity(0.5), // Define a cor do efeito de toque
+                    highlightColor: Colors.transparent, // Define a cor de destaque como transparente para remover a cor padrão
+                    child: Container(
+                      width: 200, // Defina a largura desejada para o botão
+                      height: 50,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [Color(0xFFFFFFFF), Color(0xFFFFFFFF)], // Cores do gradiente
+                          begin: Alignment.centerLeft, // Início do gradiente à esquerda
+                          end: Alignment.centerRight, // Fim do gradiente à direita
+                        ),
+                        borderRadius: BorderRadius.circular(17), // Define o raio dos cantos
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.4), // Cor da sombra
+                            spreadRadius: 2, // Espalhamento da sombra
+                            blurRadius: 5, // Desfoque da sombra
+                            offset: Offset(0, 0), // Deslocamento da sombra
+                          ),
+                        ],
+                      ),
+                      child: Material(
+                        type: MaterialType.transparency, // Torna o Material transparente
+                        borderRadius: BorderRadius.circular(17), // Define o raio dos cantos
+                        child: InkWell(
+                          onTap: () {
+                            onSignOut(context); // Chame a função de sign out
+                          },
+                          borderRadius: BorderRadius.circular(17), // Define o raio dos cantos
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 25), // Adicione um padding horizontal
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Icon(Icons.exit_to_app_outlined,
+                                    color: Colors.black54), // Cor do ícone, // Ícone "Sair"
+                                SizedBox(width: 17), // Espaço entre o ícone e o texto
+                                Text(
+                                  'Sair', // Texto "Sair"
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.black87, // Define a cor do texto como branco
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
           ),
+
+
+
         ],
       ),
     );

@@ -24,7 +24,7 @@ class LoginBody extends StatelessWidget {
     final User? user = await _signInWithGoogle();
     if (user != null) {
       userName = user.displayName ?? "Usuário Anônimo"; // Use displayName ou "Usuário Anônimo" se for nulo
-      email = user.email ?? "sem email";
+      email = user.email ?? "login sem email";
 
       Navigator.of(context).push(
         MaterialPageRoute(
@@ -43,7 +43,7 @@ class LoginBody extends StatelessWidget {
       User? user = userCredential.user;
       if (user != null) {
         userName = "Usuário Anônimo"; // Use displayName ou "Usuário Anônimo" se for nulo
-        email = "sem email";
+        email = "Login sem email";
 
         Navigator.of(context).push(
           MaterialPageRoute(
