@@ -1,3 +1,4 @@
+import 'package:fin.educacao.financeira/dicas_financeiras.dart';
 import 'package:flutter/material.dart';
 import 'package:fin.educacao.financeira/doacao.dart';
 import 'glossario.dart';
@@ -129,6 +130,50 @@ class HomePage extends StatelessWidget {
                         Text(
                           'Glossário sobre\nEducação Financeira',
                           textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white, // Cor do texto branca para melhor contraste
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              Ink(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Color(0xFF1000D3), Color(0xFF1A6BFF)], // Cores base do gradiente
+                    begin: Alignment.topCenter, // Início do gradiente (cima)
+                    end: Alignment.bottomCenter, // Fim do gradiente (baixo)
+                  ),
+                  borderRadius: BorderRadius.circular(8), // Adicione bordas arredondadas conforme necessário
+                ),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => DicasFinanceiras()),
+                    );
+                  },
+                  child: Container(
+                    width: 250,
+                    height: 70,
+                    alignment: Alignment.center,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.thumb_up_alt_outlined, // Ícone de snippet de texto
+                          color: Colors.white, // Cor do ícone
+                        ),
+                        SizedBox(width: 15), // Espaçamento entre o ícone e o texto
+                        Text(
+                          textAlign: TextAlign.center,
+                          'Dicas de\nEducação Financeira',
                           style: TextStyle(
                             fontSize: 18,
                             color: Colors.white, // Cor do texto branca para melhor contraste
