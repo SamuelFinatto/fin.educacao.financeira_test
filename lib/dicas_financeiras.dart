@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'components/custom_scrollbar.dart';
 import 'database.dart';
 
 class DicasFinanceiras extends StatefulWidget {
@@ -35,13 +36,14 @@ class _DicasFinanceirasState extends State<DicasFinanceiras> {
   }
 
   Widget _buildCard(Map<String, dynamic> conteudo) {
+    final _scrollController = ScrollController();
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(15.0),
+        padding: const EdgeInsets.all(7.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SizedBox(height: 5), // Adiciona um espaço entre o título e o texto
+            SizedBox(height: 5),
             Text(
               conteudo['titulo'] ?? 'Sem título',
               style: TextStyle(
@@ -49,20 +51,40 @@ class _DicasFinanceirasState extends State<DicasFinanceiras> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 15), // Adiciona um espaço entre o título e o texto
-            Text(
-              conteudo['texto'] ?? '',
-              style: TextStyle(
-                fontSize: 18,
+            SizedBox(height: 15),
+            Expanded(
+              child: Scrollbar(
+                controller: _scrollController,
+                thumbVisibility: true,
+                child: SingleChildScrollView(
+                  controller: _scrollController,
+                  child: Padding(
+                    padding: EdgeInsets.only(right: 8), // Adiciona uma margem de 4 pixels à direita da barra de rolagem
+                    child: Column(
+                      children: [
+                        Text(
+                          conteudo['texto'] ?? '',
+                          style: TextStyle(
+                            fontSize: 18,
+                          ),
+                          textAlign: TextAlign.justify,
+                          softWrap: true,
+                        ),
+                        //SizedBox(height: 36), // Espaçamento adicional para mostrar a seta de rolagem para baixo
+                      ],
+                    ),
+                  ),
+                ),
               ),
-              textAlign: TextAlign.justify, // Define o alinhamento do texto como justificado
-              softWrap: true, // Permite que o texto quebre em várias linhas
             ),
           ],
         ),
       ),
     );
   }
+
+
+
 
   Widget _buildPageView() {
     return PageView.builder(
@@ -93,16 +115,17 @@ class _DicasFinanceirasState extends State<DicasFinanceiras> {
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.0),
             child: Text(
-              'Aproveite as dicas que preparamos para plenejar seu futuro financeiro no curto, médio e longo prazo!',
+              'Aproveite as dicas que preparamos para planejar seu futuro financeiro no curto, médio e longo prazo!',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w400,
               ),
+              textAlign: TextAlign.justify, // Define o alinhamento do texto como justificado
             ),
           ),
-          SizedBox(height: MediaQuery.of(context).size.height * 0.07),
+          SizedBox(height: MediaQuery.of(context).size.height * 0.06),
           Container(
-            height: MediaQuery.of(context).size.height * 0.58, // Define a altura como 70% da altura da tela
+            height: MediaQuery.of(context).size.height * 0.55, // Define a altura como 70% da altura da tela
             child: PageView.builder(
               itemCount: dicasFinanceirasList.length,
               controller: _pageController,
@@ -125,14 +148,14 @@ class _DicasFinanceirasState extends State<DicasFinanceiras> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               IconButton(
-                icon: Icon(Icons.arrow_back),
+                icon: Icon(Icons.arrow_back_ios),
                 iconSize: 36, // Define o tamanho do ícone
                 onPressed: () {
                   _pageController.previousPage(duration: Duration(milliseconds: 700), curve: Curves.ease);
                 },
               ),
               IconButton(
-                icon: Icon(Icons.arrow_forward),
+                icon: Icon(Icons.arrow_forward_ios),
                 iconSize: 36, // Define o tamanho do ícone
                 onPressed: () {
                   _pageController.nextPage(duration: Duration(milliseconds: 700), curve: Curves.ease);
