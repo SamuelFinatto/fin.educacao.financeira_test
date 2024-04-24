@@ -24,6 +24,7 @@ class HomePage extends StatelessWidget {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -198,7 +199,31 @@ class HomePage extends StatelessWidget {
                 ),
                 child: InkWell(
                   onTap: () {
-                    _launchURL('https://www.serasa.com.br/score/');
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text("Atenção"),
+                          content: Text("Você será direcionado ao site da Serasa para consultar seu Score.\n"
+                                        "A página abrirá através do navegador do seu celular, deixando o Fin aberto em segundo plano."),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text("Cancelar"),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                _launchURL('https://www.serasa.com.br/score/');
+                              },
+                              child: Text("OK"),
+                            ),
+                          ],
+                        );
+                      },
+                    );
                   },
                   child: Container(
                     width: 250,
@@ -225,6 +250,7 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
               ),
+
 
 
               const SizedBox(height: 20),
@@ -352,6 +378,14 @@ class MyDrawer extends StatelessWidget {
 
   MyDrawer(this.onSignOut, this.userName, this.email, this.launchURL);
 
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Não foi possível abrir a URL $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -418,25 +452,51 @@ class MyDrawer extends StatelessWidget {
               ],
             ),
           ),
+
           ListTile(
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => Doacao(),
+                  builder: (context) => DicasFinanceiras(),
                 ),
               );
             },
             title: Row(
               children: [
-                Icon(Icons.attach_money_outlined),
+                Icon(Icons.thumb_up_alt_outlined),
                 SizedBox(width: 17), // Espaço entre o ícone e o texto
-                Text('Doação ao projeto'),
+                Text('Dicas de\nEducação Financeira'),
               ],
             ),
           ),
+
           ListTile(
             onTap: () {
-              launchURL('https://www.serasa.com.br/score/');
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text("Atenção"),
+                    content: Text("Você será direcionado ao site da Serasa para consultar seu Score.\n"
+                                  "A página abrirá através do navegador do seu celular, deixando o Fin aberto em segundo plano."),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text("Cancelar"),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          _launchURL('https://www.serasa.com.br/score/');
+                        },
+                        child: Text("OK"),
+                      ),
+                    ],
+                  );
+                },
+              );
             },
             title: Row(
               children: [
@@ -446,6 +506,7 @@ class MyDrawer extends StatelessWidget {
               ],
             ),
           ),
+
           ListTile(
             onTap: () {
               Navigator.of(context).push(
@@ -462,6 +523,24 @@ class MyDrawer extends StatelessWidget {
               ],
             ),
           ),
+
+          ListTile(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => Doacao(),
+                ),
+              );
+            },
+            title: Row(
+              children: [
+                Icon(Icons.attach_money_outlined),
+                SizedBox(width: 17), // Espaço entre o ícone e o texto
+                Text('Doação ao projeto'),
+              ],
+            ),
+          ),
+
           ListTile(
             onTap: () {
               Navigator.of(context).push(
@@ -478,6 +557,7 @@ class MyDrawer extends StatelessWidget {
               ],
             ),
           ),
+
 
           // ListTile(
           //   leading: Icon(Icons.settings),

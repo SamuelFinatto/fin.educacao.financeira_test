@@ -151,23 +151,24 @@ class _DicasFinanceirasState extends State<DicasFinanceiras> {
                 icon: Icon(Icons.arrow_back_ios),
                 iconSize: 36, // Define o tamanho do ícone
                 onPressed: () {
-                  _pageController.previousPage(duration: Duration(milliseconds: 700), curve: Curves.ease);
+                  _pageController.previousPage(duration: Duration(milliseconds: 500), curve: Curves.ease);
                 },
+              ),
+              Text(
+                "${_currentIndex + 1}/${dicasFinanceirasList.length}", // Mostra o contador de páginas
+                style: TextStyle(fontSize: 18), // Estilo do texto do contador
               ),
               IconButton(
                 icon: Icon(Icons.arrow_forward_ios),
                 iconSize: 36, // Define o tamanho do ícone
                 onPressed: () {
-                  _pageController.nextPage(duration: Duration(milliseconds: 700), curve: Curves.ease);
+                  _pageController.nextPage(duration: Duration(milliseconds: 500), curve: Curves.ease);
                 },
               ),
             ],
           ),
         ),
       ),
-
-
-
     );
   }
 }
