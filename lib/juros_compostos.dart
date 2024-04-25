@@ -147,7 +147,7 @@ class _JurosCompostosState extends State<JurosCompostos> {
                     child: Row(
                       children: [ // Espaçamento entre o texto e a linha horizontal
                         Container(
-                          height: 5,
+                          height: 6,
                           width: 40, // Ajuste a largura da linha conforme necessário
                           color: Colors.lightBlue,
                         ),
@@ -156,7 +156,7 @@ class _JurosCompostosState extends State<JurosCompostos> {
                           'Montante total:',
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
-                            fontSize: 16, // Tamanho da fonte para o texto "Montante total"
+                            fontSize: 17, // Tamanho da fonte para o texto "Montante total"
                           ),
                         ),// Espaçamento entre a linha e o valor monetário
                         SizedBox(width: 12),
@@ -164,7 +164,7 @@ class _JurosCompostosState extends State<JurosCompostos> {
                           'R\$${NumberFormat.currency(locale: 'pt_BR', symbol: '').format(valorMaxYaux)}', // Formata o valor para dinheiro BR
                           style: TextStyle(
                             fontWeight: FontWeight.w400,
-                            fontSize: 16, // Tamanho da fonte para o valor monetário
+                            fontSize: 18, // Tamanho da fonte para o valor monetário
                             color: Colors.black, // Cor do valor monetário
                           ),
                         ),
@@ -178,7 +178,7 @@ class _JurosCompostosState extends State<JurosCompostos> {
                     child: Row(
                       children: [ // Espaçamento entre o texto e a linha horizontal
                         Container(
-                          height: 5,
+                          height: 6,
                           width: 40, // Ajuste a largura da linha conforme necessário
                           color: Colors.red,
                         ),
@@ -187,7 +187,7 @@ class _JurosCompostosState extends State<JurosCompostos> {
                           'Valor investido:',
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
-                            fontSize: 16, // Tamanho da fonte para o valor monetário
+                            fontSize: 17, // Tamanho da fonte para o valor monetário
                           ),
                         ),
                         SizedBox(width: 11), // Espaçamento entre a linha e o valor monetário
@@ -195,7 +195,7 @@ class _JurosCompostosState extends State<JurosCompostos> {
                           'R\$${NumberFormat.currency(locale: 'pt_BR', symbol: '').format(valorAcumInvest)}', // Formata o valor para dinheiro BR
                           style: TextStyle(
                             fontWeight: FontWeight.w400,
-                            fontSize: 16, // Tamanho da fonte para o valor monetário
+                            fontSize: 18, // Tamanho da fonte para o valor monetário
                             color: Colors.black, // Cor do valor monetário
                           ),
                         ),
@@ -208,7 +208,7 @@ class _JurosCompostosState extends State<JurosCompostos> {
                     child: Row(
                       children: [ // Espaçamento entre o texto e a linha horizontal
                         Container(
-                          height: 5,
+                          height: 6,
                           width: 40, // Ajuste a largura da linha conforme necessário
                           color: Colors.orange,
                         ),
@@ -217,7 +217,7 @@ class _JurosCompostosState extends State<JurosCompostos> {
                           'Valor dos juros:',
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
-                            fontSize: 16, // Tamanho da fonte para o valor monetário
+                            fontSize: 17, // Tamanho da fonte para o valor monetário
                           ),
                         ),
                         SizedBox(width: 10), // Espaçamento entre a linha e o valor monetário
@@ -225,7 +225,7 @@ class _JurosCompostosState extends State<JurosCompostos> {
                           'R\$${NumberFormat.currency(locale: 'pt_BR', symbol: '').format(valorMaxYaux - valorAcumInvest)}', // Formata o valor para dinheiro BR
                           style: TextStyle(
                             fontWeight: FontWeight.w400,
-                            fontSize: 16, // Tamanho da fonte para o valor monetário
+                            fontSize: 18, // Tamanho da fonte para o valor monetário
                             color: Colors.black, // Cor do valor monetário
                           ),
                         ),
@@ -317,7 +317,7 @@ class _JurosCompostosState extends State<JurosCompostos> {
                       ),
                       Container(
                         width: 160, // Largura desejada do campo
-                        height: 30, // Altura desejada do campo
+                        height: 40, // Altura desejada do campo
                         child: TextFormField(
                           controller: _controller1,
                           keyboardType: TextInputType.number,
@@ -358,12 +358,12 @@ class _JurosCompostosState extends State<JurosCompostos> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
-                        'Valor mensal:',
+                        'Valor mensal a investir:',
                         style: TextStyle(fontSize: 18),
                       ),
                       Container(
                         width: 150, // Largura desejada do campo
-                        height: 30, // Altura desejada do campo
+                        height: 40, // Altura desejada do campo
                         child: TextFormField(
                           controller: _controller2,
                           keyboardType: TextInputType.number,
@@ -408,7 +408,7 @@ class _JurosCompostosState extends State<JurosCompostos> {
                       ),
                       Container(
                         width: 95, // Largura desejada do campo
-                        height: 30, // Altura desejada do campo
+                        height: 40, // Altura desejada do campo
                         child: TextFormField(
                           controller: _controller3,
                           keyboardType: TextInputType.number,
@@ -455,7 +455,7 @@ class _JurosCompostosState extends State<JurosCompostos> {
                       ),
                       Container(
                         width: 95, // Largura desejada do campo
-                        height: 30, // Altura desejada do campo
+                        height: 40, // Altura desejada do campo
                         child: TextFormField(
                           controller: _controller4,
                           keyboardType: TextInputType.number,

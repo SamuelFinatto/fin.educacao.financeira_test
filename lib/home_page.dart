@@ -1,4 +1,5 @@
 import 'package:fin.educacao.financeira/dicas_financeiras.dart';
+import 'package:fin.educacao.financeira/indicacoes.dart';
 import 'package:flutter/material.dart';
 import 'package:fin.educacao.financeira/doacao.dart';
 import 'glossario.dart';
@@ -199,30 +200,9 @@ class HomePage extends StatelessWidget {
                 ),
                 child: InkWell(
                   onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text("Atenção"),
-                          content: Text("Você será direcionado ao site da Serasa para consultar seu Score.\n"
-                                        "A página abrirá através do navegador do seu celular, deixando o Fin aberto em segundo plano."),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Text("Cancelar"),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                                _launchURL('https://www.serasa.com.br/score/');
-                              },
-                              child: Text("OK"),
-                            ),
-                          ],
-                        );
-                      },
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Indicacoes()),
                     );
                   },
                   child: Container(
@@ -238,7 +218,7 @@ class HomePage extends StatelessWidget {
                         ),
                         SizedBox(width: 15), // Espaçamento entre o ícone e o texto
                         Text(
-                          'Consultar Score',
+                          'Indicações',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 18,
@@ -472,37 +452,17 @@ class MyDrawer extends StatelessWidget {
 
           ListTile(
             onTap: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text("Atenção"),
-                    content: Text("Você será direcionado ao site da Serasa para consultar seu Score.\n"
-                                  "A página abrirá através do navegador do seu celular, deixando o Fin aberto em segundo plano."),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: Text("Cancelar"),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          _launchURL('https://www.serasa.com.br/score/');
-                        },
-                        child: Text("OK"),
-                      ),
-                    ],
-                  );
-                },
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => Indicacoes(),
+                ),
               );
             },
             title: Row(
               children: [
                 Icon(Icons.add_chart_outlined),
                 SizedBox(width: 17), // Espaço entre o ícone e o texto
-                Text('Consultar Score'),
+                Text('Indicações'),
               ],
             ),
           ),

@@ -21,12 +21,14 @@ class _DicasFinanceirasState extends State<DicasFinanceiras> {
   void initState() {
     super.initState();
     _carregarDicasFinanceiras(); // Carregar os conteúdos ao iniciar a tela
-    _pageController = PageController(initialPage: _currentIndex); // Inicializamos o PageController com o índice atual
+    _pageController = PageController(
+        initialPage: _currentIndex); // Inicializamos o PageController com o índice atual
   }
 
   void _carregarDicasFinanceiras() {
     FirebaseFirestore.instance.collection(collectionName)
-        .where('status', isEqualTo: true) // Filtra apenas os documentos com status verdadeiro
+        .where('status',
+        isEqualTo: true) // Filtra apenas os documentos com status verdadeiro
         .get()
         .then((snapshot) {
       setState(() {
@@ -59,7 +61,8 @@ class _DicasFinanceirasState extends State<DicasFinanceiras> {
                 child: SingleChildScrollView(
                   controller: _scrollController,
                   child: Padding(
-                    padding: EdgeInsets.only(right: 8), // Adiciona uma margem de 4 pixels à direita da barra de rolagem
+                    padding: EdgeInsets.only(right: 8),
+                    // Adiciona uma margem de 4 pixels à direita da barra de rolagem
                     child: Column(
                       children: [
                         Text(
@@ -84,8 +87,6 @@ class _DicasFinanceirasState extends State<DicasFinanceiras> {
   }
 
 
-
-
   Widget _buildPageView() {
     return PageView.builder(
       itemCount: dicasFinanceirasList.length,
@@ -102,30 +103,45 @@ class _DicasFinanceirasState extends State<DicasFinanceiras> {
   }
 
   @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Dicas de Educação Financeira'),
-        backgroundColor: Colors.green.shade800,
+        backgroundColor: Colors.green.shade800,actions: [
+          IconButton(
+            icon: Icon(Icons.close),
+            onPressed: () {
+              Navigator.pop(context); // Volta para a tela anterior
+            },
+          ),
+        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           const SizedBox(height: 20),
           const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.0),
+            padding: EdgeInsets.symmetric(horizontal: 15.0),
             child: Text(
               'Aproveite as dicas que preparamos para planejar seu futuro financeiro no curto, médio e longo prazo!',
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: FontWeight.w400,
               ),
-              textAlign: TextAlign.justify, // Define o alinhamento do texto como justificado
+              textAlign: TextAlign
+                  .justify, // Define o alinhamento do texto como justificado
             ),
           ),
-          SizedBox(height: MediaQuery.of(context).size.height * 0.06),
+          SizedBox(height: MediaQuery
+              .of(context)
+              .size
+              .height * 0.06),
           Container(
-            height: MediaQuery.of(context).size.height * 0.55, // Define a altura como 70% da altura da tela
+            height: MediaQuery
+                .of(context)
+                .size
+                .height * 0.54, // Define a altura como 70% da altura da tela
             child: PageView.builder(
               itemCount: dicasFinanceirasList.length,
               controller: _pageController,
@@ -141,28 +157,92 @@ class _DicasFinanceirasState extends State<DicasFinanceiras> {
           ),
         ],
       ),
+
+      drawer: Drawer(
+        child: Column(
+          children: <Widget>[
+            SizedBox(
+              height: 120, // Define a altura desejada para o DrawerHeader
+              child: DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Colors.green.shade800, // Define a cor de fundo como verde
+                ),
+                child: Center(
+                  child: Text(
+                    'Dicas de Educação Financeira',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white, // Define a cor do texto como branco
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            // Aqui você pode adicionar as opções do Drawer
+            ListView.builder(
+              shrinkWrap: true, // Garante que a ListView não tente ocupar mais espaço do que precisa
+              itemCount: dicasFinanceirasList.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: EdgeInsets.only(bottom: 15), // Adiciona espaçamento inferior
+                  child: ListTile(
+                    title: Text(
+                      dicasFinanceirasList[index]['titulo'],
+                      style: TextStyle(
+                        fontSize: 15, // Define o tamanho da fonte
+                      ),
+                    ),
+                    onTap: () {
+                      _pageController.jumpToPage(
+                        index,
+                      ); // Navegue para a página correspondente
+                      Navigator.pop(context); // Feche o Drawer
+                    },
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+
+
+
+
+
+
       bottomNavigationBar: Container(
-        height: 75, // Define a altura desejada para a barra
+        height: 90, // Define a altura desejada para a barra
         child: BottomAppBar(
+          elevation: 0, // Remove a sombra do BottomAppBar
+          color: Theme
+              .of(context)
+              .scaffoldBackgroundColor, // Use a cor de fundo da tela principal
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               IconButton(
                 icon: Icon(Icons.arrow_back_ios),
-                iconSize: 36, // Define o tamanho do ícone
+                iconSize: 45, // Define o tamanho do ícone
                 onPressed: () {
-                  _pageController.previousPage(duration: Duration(milliseconds: 500), curve: Curves.ease);
+                  _pageController.previousPage(
+                      duration: Duration(milliseconds: 500),
+                      curve: Curves.ease);
                 },
               ),
               Text(
-                "${_currentIndex + 1}/${dicasFinanceirasList.length}", // Mostra o contador de páginas
-                style: TextStyle(fontSize: 18), // Estilo do texto do contador
+                "${_currentIndex + 1} / ${dicasFinanceirasList.length}",
+                // Mostra o contador de páginas
+                style: TextStyle(fontSize: 20), // Estilo do texto do contador
               ),
               IconButton(
                 icon: Icon(Icons.arrow_forward_ios),
-                iconSize: 36, // Define o tamanho do ícone
+                iconSize: 45, // Define o tamanho do ícone
                 onPressed: () {
-                  _pageController.nextPage(duration: Duration(milliseconds: 500), curve: Curves.ease);
+                  _pageController.nextPage(
+                      duration: Duration(milliseconds: 500),
+                      curve: Curves.ease);
                 },
               ),
             ],
