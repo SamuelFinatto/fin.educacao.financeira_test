@@ -20,78 +20,105 @@ class _OrientadorState extends State<Orientador> {
     _carregarOrientadores(); // Carregar os conteúdos ao iniciar a tela
   }
 
-  // conexão com banco de dados relacional
-  // Future<void> _carregarOrientadores() async {
-  //   try {
-  //     var db = Database();
-  //     var telaDeOrientadores = await db.buscarDadosDosOrientadores();
-  //
-  //     setState(() {
-  //       orientadoresList = telaDeOrientadores.map((row) {
-  //         return {
-  //           'nome': row['nome'], // Ajuste conforme a estrutura do retorno da consulta
-  //           'telefone': row['telefone'], // Considerando que 'conteudo' é do tipo TEXT
-  //         };
-  //       }).toList();
-  //     });
-  //
-  //     await db.close();
-  //   } catch (e) {
-  //     print('Erro ao conectar ou executar a consulta: $e');
-  //   }
-  // }
-
   Future<void> _abrirWhatsApp(String telefone) async {
-    Uri url = Uri.parse('https://wa.me/$telefone');
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url);
-    } else {
-      throw 'Não foi possível abrir o WhatsApp.';
-    }
+    String numeroLimpo = telefone.replaceAll(new RegExp(r'[^\w\s]+'), ''); // Remove caracteres não numéricos do número de telefone
+    Uri url = Uri.parse('https://wa.me/$numeroLimpo');
+    await launchUrl(url);
   }
 
   void _carregarOrientadores() {
-    FirebaseFirestore.instance.collection(collectionName)
-        .where('status', isEqualTo: true) // Filtra apenas os documentos com status verdadeiro
+    FirebaseFirestore.instance
+        .collection(collectionName)
+        .where('status', isEqualTo: true)
         .snapshots()
         .listen((snapshot) {
       setState(() {
-        orientadoresList = snapshot.docs.map((doc) => doc.data()).toList();
+        orientadoresList = snapshot.docs.map((doc) {
+          return {
+            'id': doc.id,
+            'nome': doc['nome'],
+            'telefone': doc['telefone'], // Certifique-se de que 'telefone' está presente nos documentos
+          };
+        }).toList();
       });
     });
+  }
+
+  void _confirmarAbrirWhatsApp(String telefone) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Abrir o app WhatsApp'),
+          content: Text('Ao clicar em "OK", você será direcionado ao aplicativo do WhatsApp.\n\nDeseja continuar?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Fecha o diálogo
+              },
+              child: Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () {
+                _abrirWhatsApp(telefone);
+                Navigator.of(context).pop(); // Fecha o diálogo após abrir o WhatsApp
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   List<Widget> _construirListaDeBotoes() {
     return orientadoresList.map((conteudo) {
       return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 4.0),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
         child: ElevatedButton(
           onPressed: () {
-            _abrirWhatsApp(conteudo['telefone']);
+            _confirmarAbrirWhatsApp(conteudo['telefone']);
           },
           style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.white, backgroundColor: Color(0xFF004086), // Cor do texto do botão
+            foregroundColor: Colors.white,
+            backgroundColor: Color(0xFF004086),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10), // Borda arredondada
+              borderRadius: BorderRadius.circular(10),
             ),
+            minimumSize: Size(double.infinity, 45),
           ),
-          child: Text(
-            conteudo['nome'] ?? 'Sem título',
-            style: const TextStyle(
-              fontSize: 17, // Defina o tamanho da fonte desejado
-            ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/images/whatsapp.png',
+                width: 32,
+                height: 32,
+              ),
+              SizedBox(width: 15),
+              Flexible(
+                child: Text(
+                  conteudo['nome'] ?? 'Sem título',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 17,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       );
     }).toList();
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Orientador Financeiro'),
-        backgroundColor: Colors.green.shade800 // Defina a cor desejada para a barra superior desta tela
+        backgroundColor: Colors.green.shade800,
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -102,10 +129,10 @@ class _OrientadorState extends State<Orientador> {
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.0),
               child: Text(
-                'Escolha um orientador e faça contato pelo Whatsapp clicando em seu nome:',
+                'Escolha um orientador e faça contato pelo app Whatsapp clicando em seu nome:',
                 style: TextStyle(
                   fontSize: 18,
-                  fontWeight: FontWeight.w400, // Título em negrito
+                  fontWeight: FontWeight.w400,
                 ),
               ),
             ),

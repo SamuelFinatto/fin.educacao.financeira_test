@@ -136,7 +136,7 @@ class _JurosCompostosState extends State<JurosCompostos> {
             //left: 0,
             //right: 15,
             child: Container(
-              padding: const EdgeInsets.all(15.0),
+              padding: const EdgeInsets.all(10.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -362,7 +362,7 @@ class _JurosCompostosState extends State<JurosCompostos> {
                         style: TextStyle(fontSize: 18),
                       ),
                       Container(
-                        width: 150, // Largura desejada do campo
+                        width: 133, // Largura desejada do campo
                         height: 40, // Altura desejada do campo
                         child: TextFormField(
                           controller: _controller2,
