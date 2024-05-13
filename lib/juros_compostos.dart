@@ -21,6 +21,12 @@ class _JurosCompostosState extends State<JurosCompostos> {
   final FocusNode _jurosFocusNode = FocusNode();
   final FocusNode _periodoFocusNode = FocusNode();
 
+  @override
+  void initState() {
+    super.initState();
+    _controller3.text = '0.80'; // Defina o valor inicial aqui
+  }
+
   String formatCurrency(String value) {
     final cleanValue = value.replaceAll(RegExp(r'[^\d]'), '');
     return _currencyFormat.format(double.parse(cleanValue) / 100);
@@ -44,21 +50,23 @@ class _JurosCompostosState extends State<JurosCompostos> {
     return principal * pow((1 + rate), time);
   }
 
-  double calculateFinalCompoundInterest(double principal, double rate, int time, double monthlyAddition) {
+  double calculateFinalCompoundInterest(double principal, double taxa, int time, double valorMensal) {
     int n = 12; // Juros compostos mensais (considerando 12 meses por ano)
-    double amount = principal;
-    if (rate != 0) {
-      rate = rate / 100; // Convertendo a taxa percentual para decimal
-      for (int i = 0; i < time*12; i++) {
-        //print('$amount');
-        amount = amount * (1 + rate/100); // Aplica juros no montante atual
-        amount += monthlyAddition; // Adiciona o valor do aporte mensal
-      }
+    double valorPresente = principal;
+    double valorFuturo = 0.0;
+    taxa = taxa / 100; // Convertendo a taxa percentual para decimal
+    double taxaAnual = taxa / 100; // Convertendo taxa mensal para taxa anual equivalente
+    if (taxa != 0) {
+      valorFuturo = valorPresente * pow(1 + taxaAnual, n * time); // montante acumulado com juros compostos
+      print('valor futuro é: $valorFuturo');
+      // Adiciona os aportes mensais usando a fórmula dos pagamentos iguais
+      double valorFuturoAportes = valorMensal * ((pow(1 + taxaAnual, n * time) - 1) / taxaAnual);
+      print('valor valorFuturoAportes é: $valorMensal');
+      valorFuturo += valorFuturoAportes;
     } else {
-      // Calcula o montante apenas com adições mensais ao principal (sem juros)
-      amount = principal + (monthlyAddition * time*12);
+      valorFuturo = valorPresente + (valorMensal * time * 12);
     }
-    return amount;
+    return valorFuturo;
   }
 
   @override
@@ -248,7 +256,7 @@ class _JurosCompostosState extends State<JurosCompostos> {
                           child: LineChart(
                             LineChartData(
                               minX: 0,
-                              maxX: double.parse(valorPeriodo)*12,
+                              maxX: double.parse(valorPeriodo) <= 10 ? double.parse(valorPeriodo) * 12 : double.parse(valorPeriodo),
                               minY: 0,
                               maxY: valorMaxY,
                               lineBarsData: [
@@ -273,7 +281,9 @@ class _JurosCompostosState extends State<JurosCompostos> {
                                 bottomTitles: AxisTitles(sideTitles: SideTitles(
                                     showTitles: true,
                                     reservedSize: 27,
-                                    interval: (double.parse(valorPeriodo)*12)/6
+                                    interval: double.parse(valorPeriodo) <= 10 ? (double.parse(valorPeriodo) * 12)/6 :
+                                              double.parse(valorPeriodo) <= 30 ? 6 :
+                                              double.parse(valorPeriodo) <= 40 ? 8 : 10,
                                 )),
 
                               ),
@@ -403,7 +413,7 @@ class _JurosCompostosState extends State<JurosCompostos> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
-                        'Taxa de juros mensal: ',
+                        'Percentual de juros mensais: ',
                         style: TextStyle(fontSize: 18),
                       ),
                       Container(
@@ -494,6 +504,42 @@ class _JurosCompostosState extends State<JurosCompostos> {
                     ],
                   ),
 
+                  const SizedBox(height: 20),
+
+                  // Adicione um botão para limpar os campos
+                  Ink(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Color(0xFF1000D3), Color(0xFF1A6BFF)], // Cores base do gradiente
+                        begin: Alignment.topCenter, // Início do gradiente (cima)
+                        end: Alignment.bottomCenter, // Fim do gradiente (baixo)
+                      ),
+                      borderRadius: BorderRadius.circular(8), // Adicione bordas arredondadas conforme necessário
+                    ),
+                    child: InkWell(
+                      onTap: () {
+                        _controller1.clear();
+                        _controller2.clear();
+                        _controller3.clear();
+                        _controller4.clear();
+                      },
+                      child: Container(
+                        width: 250,
+                        height: 50,
+                        alignment: Alignment.center,
+                        child: Text(
+                          'Limpar campos',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white, // Cor do texto branca para melhor contraste
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
+
                 ],
               ),
             ),
@@ -543,23 +589,34 @@ class _JurosCompostosState extends State<JurosCompostos> {
     double interest = valorInvestidoInicial; // Inicialize o interesse como 0.0
     double totalJuros = 0.0;
     double tempoMeses = _controller4.text.isEmpty ? 12 : double.parse(_controller4.text) * 12;
+    double tempoAnos = _controller4.text.isEmpty ? 12 : double.parse(_controller4.text);
     double yValuePontoI = 0.0;
-    if (_controller1.text.isNotEmpty && _controller2.text.isNotEmpty  && _controller4.text.isNotEmpty) {
-      for (int i = 0; i <= tempoMeses; i++) {
-
-        for (int j = 0; j <= i; j++) {
-          List<FlSpot> spotsTotal = _calculateSpotsDinheiroAcumulado(rate);
-          FlSpot? pontoi = spotsTotal[j];
-          yValuePontoI = pontoi!.y;
+    if (_controller1.text.isNotEmpty && _controller2.text.isNotEmpty && _controller4.text.isNotEmpty) {
+      if (tempoMeses <= 120) {
+        for (int i = 0; i <= tempoMeses; i++) {
+          for (int j = 0; j <= i; j++) {
+            List<FlSpot> spotsTotal = _calculateSpotsDinheiroAcumulado(rate);
+            FlSpot? pontoi = spotsTotal[j];
+            yValuePontoI = pontoi!.y;
+          }
+          totalJuros = yValuePontoI - interest;
+          interest += valorInvestidoMensal;
+          //print('interest $interest | yValuePontoI $yValuePontoI | totalJuros $totalJuros');
+          spots.add(FlSpot(
+              i.toDouble(), double.parse(totalJuros.toStringAsFixed(2))));
         }
-
-        totalJuros = yValuePontoI - interest;
-
-        interest += valorInvestidoMensal;
-
-        //print('interest $interest | yValuePontoI $yValuePontoI | totalJuros $totalJuros');
-
-        spots.add(FlSpot(i.toDouble(), double.parse(totalJuros.toStringAsFixed(2))));
+      } else {
+        for (int i = 0; i <= tempoAnos; i++) {
+          for (int j = 0; j <= i; j++) {
+            List<FlSpot> spotsTotal = _calculateSpotsDinheiroAcumulado(rate);
+            FlSpot? pontoi = spotsTotal[j];
+            yValuePontoI = pontoi!.y;
+          }
+          totalJuros = yValuePontoI - interest;
+          interest += valorInvestidoMensal;
+          spots.add(FlSpot(
+              i.toDouble(), double.parse(totalJuros.toStringAsFixed(2))));
+        }
       }
     }
     return spots;
@@ -572,10 +629,20 @@ class _JurosCompostosState extends State<JurosCompostos> {
     double valorInvestidoInicial = double.tryParse(_controller1.text.replaceAll('.', '').replaceAll(',', '.').replaceAll('R\$', '')) ?? 0.0;
     double valorInvestidoMensal = double.tryParse(_controller2.text.replaceAll('.', '').replaceAll(',', '.').replaceAll('R\$', '')) ?? 0.0;
     double interest = valorInvestidoInicial; // Inicialize o interesse como 0.0
+    double tempoMeses = _controller4.text.isEmpty ? 12 : double.parse(_controller4.text) * 12;
+    double tempoAnos = _controller4.text.isEmpty ? 12 : double.parse(_controller4.text);
+
     if (_controller1.text.isNotEmpty && _controller2.text.isNotEmpty  && _controller4.text.isNotEmpty) {
-      for (int i = 0; i <= (_controller4.text.isEmpty ? 12 : double.parse(_controller4.text) * 12); i++) {
-        spots.add(FlSpot(i.toDouble(), interest));
-        interest += valorInvestidoMensal;
+      if (tempoMeses <= 120) {
+        for (int i = 0; i <= (tempoMeses); i++) {
+          spots.add(FlSpot(i.toDouble(), interest));
+          interest += valorInvestidoMensal;
+        }
+      } else {
+        for (int i = 0; i <= (tempoAnos); i++) {
+          spots.add(FlSpot(i.toDouble(), interest));
+          interest += valorInvestidoMensal;
+        }
       }
     }
     return spots;
@@ -587,26 +654,56 @@ class _JurosCompostosState extends State<JurosCompostos> {
     double aporteMensal = double.tryParse(_controller2.text.replaceAll('.', '').replaceAll(',', '.').replaceAll('R\$', '')) ?? 0.0;
     double montante = valorInvestidoInicial;
     double taxaJuros = rate;
+    double taxaAnual = taxaJuros; // Convertendo taxa mensal para taxa anual equivalente
+    int n = 12; // Juros compostos mensais (considerando 12 meses por ano)
     double tempoMeses = _controller4.text.isEmpty ? 12 : double.parse(_controller4.text) * 12;
+    double tempoAnos = _controller4.text.isEmpty ? 12 : double.parse(_controller4.text);
 
     if (_controller1.text.isNotEmpty && _controller2.text.isNotEmpty && _controller4.text.isNotEmpty) {
+      double jurosCompostos = 0.0;
       spots.add(FlSpot(0, montante)); // Adiciona o ponto inicial com valor do investimento inicial
       //print('Mês 0: $montante');
-      spots.add(FlSpot(1, montante = montante *(1+rate)+aporteMensal)); // Adiciona o ponto inicial com valor do investimento inicial
-      //print('Mês 1: $montante');
 
-      double jurosCompostos = 0.0;
-      for (int i = 2; i <= tempoMeses; i++) {
+      if (tempoMeses <= 120) {
+        spots.add(FlSpot(1, montante = montante *(1+rate)+aporteMensal)); // Adiciona o ponto inicial com valor do investimento inicial
+        //print('Mês 1: $montante');
+
+
+        for (int i = 2; i <= tempoMeses; i++) {
           jurosCompostos = montante;
           for (int j = 1; j < i; j++) {
             jurosCompostos *= (1 + taxaJuros);
             if (i > 1) {
-                jurosCompostos += aporteMensal;
+              jurosCompostos += aporteMensal;
             }
           }
-        //print('Mês $i: $jurosCompostos final');
+          //print('Mês $i: $jurosCompostos final');
 
-        spots.add(FlSpot(i.toDouble(), double.parse(jurosCompostos.toStringAsFixed(2))));
+          spots.add(FlSpot(i.toDouble(), double.parse(jurosCompostos.toStringAsFixed(2))));
+        }
+      } else {
+        // Calcula pontos anuais
+        spots.add(FlSpot(1, montante = montante * pow(1 + taxaAnual, n) + (aporteMensal * ((pow(1 + taxaAnual, n) - 1) / taxaAnual)) ) ); // Adiciona o ponto inicial com valor do investimento inicial
+        //print('Mês 1: $montante');
+
+        for (int i = 2; i <= tempoAnos; i++) {
+          jurosCompostos = valorInvestidoInicial * pow(1 + taxaAnual, n * i);
+          jurosCompostos += aporteMensal * ((pow(1 + taxaAnual, n * (i)) - 1) / taxaAnual);
+
+          double montanteCalculado = valorInvestidoInicial * pow(1 + taxaAnual, n * i);
+          double aporteMensalCalculado = aporteMensal * ((pow(1 + taxaAnual, n * (i)) - 1) / taxaAnual);
+
+          // print('Mês $i montante: $montanteCalculado');
+          // print('Mês $i aporte: $aporteMensalCalculado');
+          // print('Mês $i total: $jurosCompostos');
+
+          //valorFuturo = valorPresente * pow(1 + taxaAnual, n * time); // montante acumulado com juros compostos
+          //print('valor futuro é: $valorFuturo');
+          // Adiciona os aportes mensais usando a fórmula dos pagamentos iguais
+          //double valorFuturoAportes = valorMensal * ((pow(1 + taxaAnual, n * time) - 1) / taxaAnual);
+
+          spots.add(FlSpot(i.toDouble(), double.parse(jurosCompostos.toStringAsFixed(2))));
+        }
       }
     }
     return spots;
