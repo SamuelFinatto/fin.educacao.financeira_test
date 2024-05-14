@@ -25,6 +25,8 @@ class _JurosCompostosState extends State<JurosCompostos> {
   void initState() {
     super.initState();
     _controller3.text = '0.80'; // Defina o valor inicial aqui
+    _controller1.text = 'R\$ 0,00'; // Defina o valor inicial aqui
+    _controller2.text = 'R\$ 0,00'; // Defina o valor inicial aqui
   }
 
   String formatCurrency(String value) {
@@ -43,7 +45,7 @@ class _JurosCompostosState extends State<JurosCompostos> {
       return ''; // Retorna uma string vazia ou outra ação apropriada para um valor vazio
     }
     final cleanValue = value.replaceAll(RegExp(r'[^\d]'), '');
-    return '${int.parse(cleanValue).clamp(0, 50)}';
+    return '${int.parse(cleanValue).clamp(0, 70)}';
   }
 
   double calculateCompoundInterest(double principal, double rate, int time) {
@@ -58,10 +60,10 @@ class _JurosCompostosState extends State<JurosCompostos> {
     double taxaAnual = taxa / 100; // Convertendo taxa mensal para taxa anual equivalente
     if (taxa != 0) {
       valorFuturo = valorPresente * pow(1 + taxaAnual, n * time); // montante acumulado com juros compostos
-      print('valor futuro é: $valorFuturo');
+      //print('valor futuro é: $valorFuturo');
       // Adiciona os aportes mensais usando a fórmula dos pagamentos iguais
       double valorFuturoAportes = valorMensal * ((pow(1 + taxaAnual, n * time) - 1) / taxaAnual);
-      print('valor valorFuturoAportes é: $valorMensal');
+      //print('valor valorFuturoAportes é: $valorMensal');
       valorFuturo += valorFuturoAportes;
     } else {
       valorFuturo = valorPresente + (valorMensal * time * 12);
@@ -131,7 +133,44 @@ class _JurosCompostosState extends State<JurosCompostos> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Simular Juros Compostos'),
-        backgroundColor: Colors.green.shade800 // Defina a cor desejada para a barra superior desta tela
+        backgroundColor: Colors.green.shade800,
+        actions: [
+          Container( // Container para o IconButton
+            margin: EdgeInsets.only(right: 10.0), // Margem à direita
+            child: IconButton(
+              icon: Icon(Icons.help_outline), // Ícone de informação
+              onPressed: () {
+                // Ao clicar no ícone, exibe um diálogo de ajuda
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Explicando a tela de simulação:"),
+                      content: Text(
+                        "Esta tela serve para simular juros compostos, de maneira que você possa entender o quanto um investimento pode render de juros ao longo do tempo."
+                        "\nPara isso, preencha os campos disponíveis, considerando que:"
+                        "\n- O Valor inicial, é um dinheiro que você possui ou não, para começar a investir."
+                        "\n- Valor mensal a investir, é um dinheiro que você pretende investir todo mês."
+                        "\n- Já o Percentual de juros mensais, é a taxa de juros que seu investimento pode render por mês. Para auxiliar, já deixamos preenchido um percentual normalmente utilizado por instituições financeiras."
+                        "\n- E o Período em anos é o tempo que você pretende investir."
+                        "\n\nPerceba que quanto maior o prazo do investimento, mais seu dinheiro irá trabalhar por você, aumentando seus ganhos.",
+                        textAlign: TextAlign.justify, // Texto justificado
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text("Fechar"),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        ],
       ),
     body: SingleChildScrollView(
       //child: Container(
@@ -476,10 +515,10 @@ class _JurosCompostosState extends State<JurosCompostos> {
                           style: const TextStyle(fontSize: 18),
                           focusNode: _periodoFocusNode,
                           onChanged: (value) {
-                            if (value.isNotEmpty && (int.parse(value) < 1 || int.parse(value) > 40) ) {
+                            if (value.isNotEmpty && (int.parse(value) < 1 || int.parse(value) > 70) ) {
                                 // Se o valor digitado estiver fora do intervalo desejado, defina-o para o limite mais próximo
                                 setState(() {
-                                  _controller4.text = (int.parse(value) < 1) ? '1' : '40';
+                                  _controller4.text = (int.parse(value) < 1) ? '1' : '70';
                                 });
                             } else {
                               final formatted = formatInteger(value);
@@ -518,10 +557,11 @@ class _JurosCompostosState extends State<JurosCompostos> {
                     ),
                     child: InkWell(
                       onTap: () {
-                        _controller1.clear();
-                        _controller2.clear();
+                        _controller1.text = 'R\$ 0,00';
+                        _controller2.text = 'R\$ 0,00';
                         _controller3.clear();
                         _controller4.clear();
+
                       },
                       child: Container(
                         width: 250,
@@ -602,8 +642,7 @@ class _JurosCompostosState extends State<JurosCompostos> {
           totalJuros = yValuePontoI - interest;
           interest += valorInvestidoMensal;
           //print('interest $interest | yValuePontoI $yValuePontoI | totalJuros $totalJuros');
-          spots.add(FlSpot(
-              i.toDouble(), double.parse(totalJuros.toStringAsFixed(2))));
+          spots.add(FlSpot(i.toDouble(), double.parse(totalJuros.toStringAsFixed(2))));
         }
       } else {
         for (int i = 0; i <= tempoAnos; i++) {
@@ -613,15 +652,17 @@ class _JurosCompostosState extends State<JurosCompostos> {
             yValuePontoI = pontoi!.y;
           }
           totalJuros = yValuePontoI - interest;
-          interest += valorInvestidoMensal;
-          spots.add(FlSpot(
-              i.toDouble(), double.parse(totalJuros.toStringAsFixed(2))));
+          interest += valorInvestidoMensal * 12;
+          spots.add(FlSpot(i.toDouble(), double.parse(totalJuros.toStringAsFixed(2))));
+
+          //print('Mês $i valor investido: $totalJuros');
         }
       }
     }
     return spots;
   }
 
+  // calculo OK
   List<FlSpot> _calculateSpotsDinheiroInvestido (double rate) {
     var principal = double.tryParse(_controller1.text.replaceAll('.', '').replaceAll(',', '.').replaceAll('R\$', '')) ?? 0.0;
     final List<FlSpot> spots = [];
@@ -641,13 +682,16 @@ class _JurosCompostosState extends State<JurosCompostos> {
       } else {
         for (int i = 0; i <= (tempoAnos); i++) {
           spots.add(FlSpot(i.toDouble(), interest));
-          interest += valorInvestidoMensal;
+          interest += valorInvestidoMensal * 12;
+
+          //print('Mês $i valor investido: $interest');
         }
       }
     }
     return spots;
   }
 
+  // calculo OK
   List<FlSpot> _calculateSpotsDinheiroAcumulado(double rate) {
     final List<FlSpot> spots = [];
     double valorInvestidoInicial = double.tryParse(_controller1.text.replaceAll('.', '').replaceAll(',', '.').replaceAll('R\$', '')) ?? 0.0;
@@ -698,7 +742,7 @@ class _JurosCompostosState extends State<JurosCompostos> {
           // print('Mês $i total: $jurosCompostos');
 
           //valorFuturo = valorPresente * pow(1 + taxaAnual, n * time); // montante acumulado com juros compostos
-          //print('valor futuro é: $valorFuturo');
+          //print('valor futuro é: $jurosCompostos');
           // Adiciona os aportes mensais usando a fórmula dos pagamentos iguais
           //double valorFuturoAportes = valorMensal * ((pow(1 + taxaAnual, n * time) - 1) / taxaAnual);
 

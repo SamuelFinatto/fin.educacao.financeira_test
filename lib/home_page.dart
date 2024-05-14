@@ -371,7 +371,7 @@ class MyDrawer extends StatelessWidget {
       child: Column(
         children: <Widget>[
           SizedBox(
-            height: 120, // Define a altura desejada para o UserAccountsDrawerHeader
+            height: 150, // Define a altura desejada para o UserAccountsDrawerHeader
             child: UserAccountsDrawerHeader(
               accountName: Text(
                 '$userName',
