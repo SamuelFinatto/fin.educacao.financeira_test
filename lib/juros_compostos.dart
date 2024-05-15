@@ -71,6 +71,38 @@ class _JurosCompostosState extends State<JurosCompostos> {
     return valorFuturo;
   }
 
+
+  LineChartBarData get lineChartBarData1_1 => LineChartBarData(
+    isCurved: true,
+    color: Colors.lightBlue,
+    barWidth: 3,
+    isStrokeCapRound: true,
+    dotData: FlDotData(show: false),
+    belowBarData: BarAreaData(show: false),
+    spots: _calculateSpotsDinheiroAcumulado(_controller3.text.isEmpty ? 0.0 : (double.parse(_controller3.text))/100),
+  );
+
+  LineChartBarData get lineChartBarData1_2 => LineChartBarData(
+    isCurved: true,
+    color: Colors.orange,
+    barWidth: 3,
+    isStrokeCapRound: true,
+    dotData: FlDotData(show: false),
+    belowBarData: BarAreaData(show: false),
+    spots: _calculateSpotsTotalJuros(_controller3.text.isEmpty ? 0.0 : (double.parse(_controller3.text))/100),
+  );
+
+  LineChartBarData get lineChartBarData1_3 => LineChartBarData(
+    isCurved: true,
+    color: Colors.red,
+    barWidth: 3,
+    isStrokeCapRound: true,
+    dotData: FlDotData(show: false),
+    belowBarData: BarAreaData(show: false),
+    spots: _calculateSpotsDinheiroInvestido(_controller3.text.isEmpty ? 0.0 : (double.parse(_controller3.text))/100),
+  );
+
+
   @override
   Widget build(BuildContext context) {
     double valorIntervaloGrafico = 10000;
@@ -135,26 +167,42 @@ class _JurosCompostosState extends State<JurosCompostos> {
         title: const Text('Simular Juros Compostos'),
         backgroundColor: Colors.green.shade800,
         actions: [
-          Container( // Container para o IconButton
-            margin: EdgeInsets.only(right: 10.0), // Margem à direita
+          Container(
+            margin: EdgeInsets.only(right: 10.0),
             child: IconButton(
-              icon: Icon(Icons.help_outline), // Ícone de informação
+              icon: Icon(Icons.info_outline),
               onPressed: () {
-                // Ao clicar no ícone, exibe um diálogo de ajuda
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
                       title: Text("Explicando a tela de simulação:"),
-                      content: Text(
-                        "Esta tela serve para simular juros compostos, de maneira que você possa entender o quanto um investimento pode render de juros ao longo do tempo."
-                        "\nPara isso, preencha os campos disponíveis, considerando que:"
-                        "\n- O Valor inicial, é um dinheiro que você possui ou não, para começar a investir."
-                        "\n- Valor mensal a investir, é um dinheiro que você pretende investir todo mês."
-                        "\n- Já o Percentual de juros mensais, é a taxa de juros que seu investimento pode render por mês. Para auxiliar, já deixamos preenchido um percentual normalmente utilizado por instituições financeiras."
-                        "\n- E o Período em anos é o tempo que você pretende investir."
-                        "\n\nPerceba que quanto maior o prazo do investimento, mais seu dinheiro irá trabalhar por você, aumentando seus ganhos.",
-                        textAlign: TextAlign.justify, // Texto justificado
+                      insetPadding: EdgeInsets.symmetric(horizontal: 10.0), // Adiciona preenchimento ao redor do conteúdo
+                      content: SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.4, // Defina a altura desejada
+                        child: Scrollbar(
+                          thumbVisibility: true, // Torna a barra de rolagem sempre visível
+                          child: SingleChildScrollView(
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 7.0), // Adiciona um espaçamento de 5 pixeis na parte direita
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Esta tela serve para simular juros compostos, de maneira que você possa entender o quanto um investimento pode render de juros ao longo do tempo."
+                                        "\nPara isso, preencha os campos disponíveis, considerando que:"
+                                        "\n- O Valor inicial, é um dinheiro que você possui ou não, para começar a investir."
+                                        "\n- Valor mensal a investir, é um dinheiro que você pretende investir todo mês."
+                                        "\n- Já o Percentual de juros mensais, é a taxa de juros que seu investimento pode render por mês. Para auxiliar, já deixamos preenchido um percentual normalmente utilizado por instituições financeiras."
+                                        "\n- E o Período em anos é o tempo que você pretende investir."
+                                        "\n\nPerceba que quanto maior o prazo do investimento, mais seu dinheiro irá trabalhar por você, aumentando seus ganhos.",
+                                    textAlign: TextAlign.justify,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                       actions: [
                         TextButton(
@@ -172,7 +220,15 @@ class _JurosCompostosState extends State<JurosCompostos> {
           ),
         ],
       ),
-    body: SingleChildScrollView(
+
+
+
+
+
+
+
+
+      body: SingleChildScrollView(
       //child: Container(
         //height: MediaQuery.of(context).size.height - 180, // Define a altura do Container
         //child: Stack(
@@ -219,7 +275,8 @@ class _JurosCompostosState extends State<JurosCompostos> {
                     ),
                   ),
 
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 8),
+
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 3.0),
                     child: Row(
@@ -249,7 +306,9 @@ class _JurosCompostosState extends State<JurosCompostos> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 10),
+
+                  const SizedBox(height: 8),
+
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 3.0),
                     child: Row(
@@ -289,7 +348,7 @@ class _JurosCompostosState extends State<JurosCompostos> {
                       Expanded(
                         child: Container(
                           margin: EdgeInsets.only(right: 13), // Margem de 10 pixels do lado direito
-                          height: 220, // Defina a altura do gráfico
+                          height: 200, // Defina a altura do gráfico
                           child: AbsorbPointer(
                             absorbing: true, // Defina como true para desativar os eventos de toque
                           child: LineChart(
@@ -321,8 +380,11 @@ class _JurosCompostosState extends State<JurosCompostos> {
                                     showTitles: true,
                                     reservedSize: 27,
                                     interval: double.parse(valorPeriodo) <= 10 ? (double.parse(valorPeriodo) * 12)/6 :
-                                              double.parse(valorPeriodo) <= 30 ? 6 :
-                                              double.parse(valorPeriodo) <= 40 ? 8 : 10,
+                                              double.parse(valorPeriodo) <= 30 && double.parse(valorPeriodo) % 2 != 0 ? (int.parse(valorPeriodo) ~/ 4).toDouble()+1 :
+                                              double.parse(valorPeriodo) <= 30 && double.parse(valorPeriodo) % 2 == 0 ? (int.parse(valorPeriodo) ~/ 4).toDouble()+1 :
+                                              double.parse(valorPeriodo) > 30 && double.parse(valorPeriodo) % 2 != 0 ? (int.parse(valorPeriodo) ~/ 4).toDouble()+1 :
+                                              double.parse(valorPeriodo) > 30 && double.parse(valorPeriodo) % 2 == 0 ? (int.parse(valorPeriodo) ~/ 4).toDouble()+1 : 10
+
                                 )),
 
                               ),
@@ -354,7 +416,18 @@ class _JurosCompostosState extends State<JurosCompostos> {
                     ],
                   ),
 
-                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        (_controller4.text.isEmpty ? 0 : int.parse(_controller4.text)) <= 10 ? 'Meses' : 'Anos',
+                        style: TextStyle(fontSize: 16), // Estilo de fonte, se necessário
+                      ),
+                      SizedBox(width: 10), // Espaço entre o texto e o gráfico
+                    ],
+                  ),
+
+                  const SizedBox(height: 10),
 
                   // LINHA 1
                   Row(
@@ -401,7 +474,7 @@ class _JurosCompostosState extends State<JurosCompostos> {
                     ],
                   ),
 
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 8),
                   // VALOR MENSAL
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -446,7 +519,7 @@ class _JurosCompostosState extends State<JurosCompostos> {
                     ],
                   ),
 
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 8),
                   // TAXA DE JUROS
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -493,7 +566,7 @@ class _JurosCompostosState extends State<JurosCompostos> {
                     ],
                   ),
 
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 8),
                   // PERÍODO EM ANOS
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -543,7 +616,7 @@ class _JurosCompostosState extends State<JurosCompostos> {
                     ],
                   ),
 
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
 
                   // Adicione um botão para limpar os campos
                   Ink(
@@ -562,10 +635,16 @@ class _JurosCompostosState extends State<JurosCompostos> {
                         _controller3.clear();
                         _controller4.clear();
 
+                        // Limpar os pontos do gráfico
+                        setState(() {
+                          lineChartBarData1_1.copyWith(spots: []);
+                          lineChartBarData1_2.copyWith(spots: []);
+                          lineChartBarData1_3.copyWith(spots: []);
+                        });
                       },
                       child: Container(
                         width: 250,
-                        height: 50,
+                        height: 45,
                         alignment: Alignment.center,
                         child: Text(
                           'Limpar campos',
@@ -590,36 +669,6 @@ class _JurosCompostosState extends State<JurosCompostos> {
     //),
     );
   }
-
-  LineChartBarData get lineChartBarData1_1 => LineChartBarData(
-    isCurved: true,
-    color: Colors.lightBlue,
-    barWidth: 3,
-    isStrokeCapRound: true,
-    dotData: FlDotData(show: false),
-    belowBarData: BarAreaData(show: false),
-    spots: _calculateSpotsDinheiroAcumulado(_controller3.text.isEmpty ? 0.0 : (double.parse(_controller3.text))/100),
-  );
-
-  LineChartBarData get lineChartBarData1_2 => LineChartBarData(
-    isCurved: true,
-    color: Colors.orange,
-    barWidth: 3,
-    isStrokeCapRound: true,
-    dotData: FlDotData(show: false),
-    belowBarData: BarAreaData(show: false),
-    spots: _calculateSpotsTotalJuros(_controller3.text.isEmpty ? 0.0 : (double.parse(_controller3.text))/100),
-  );
-
-  LineChartBarData get lineChartBarData1_3 => LineChartBarData(
-    isCurved: true,
-    color: Colors.red,
-    barWidth: 3,
-    isStrokeCapRound: true,
-    dotData: FlDotData(show: false),
-    belowBarData: BarAreaData(show: false),
-    spots: _calculateSpotsDinheiroInvestido(_controller3.text.isEmpty ? 0.0 : (double.parse(_controller3.text))/100),
-  );
 
   List<FlSpot> _calculateSpotsTotalJuros(double rate) {
     final principal = 0.0;

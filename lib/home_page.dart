@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:fin.educacao.financeira/doacao.dart';
 import 'glossario.dart';
 import 'juros_compostos.dart';
+import 'metas.dart';
 import 'orientadores.dart';
 import 'sobre.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'components/custom_snack_bar.dart';
 
 
 class HomePage extends StatelessWidget {
@@ -25,8 +27,34 @@ class HomePage extends StatelessWidget {
     }
   }
 
+  void _showCustomSnackBar(BuildContext context, String message) {
+
+    bool _isSnackBarVisible = false;
+
+    if (_isSnackBarVisible) {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      _isSnackBarVisible = false;
+    }
+
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: CustomSnackBar(message: message),
+        duration: Duration(milliseconds: 2500),
+        behavior: SnackBarBehavior.floating,
+        elevation: 6, // Adiciona elevação para garantir espaço suficiente
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+    );
+
+    _isSnackBarVisible = true;
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
           title: const Text('Página Inicial'),
@@ -34,313 +62,368 @@ class HomePage extends StatelessWidget {
       ),
       drawer: MyDrawer(signOut, userName, email, _launchURL), // Crie o Drawer como um widget separado
       backgroundColor: Colors.white, // Cor de fundo da tela
-      body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              // Texto na parte superior da tela
-              Padding(
-                padding: const EdgeInsets.only(top: 50.0),
-                child: Text(
-                  'Obrigado pelo acesso, $userName!',
-                  textAlign: TextAlign.left,
-                  style: const TextStyle(
-                    fontSize: 17, // Tamanho da fonte desejado
-                    // Outras propriedades de estilo podem ser adicionadas aqui, se necessário
-                  ),
-                ),
-              ),
-              const SizedBox(height: 50), // Espaçamento entre o texto e os botões
-
-
-              Ink(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Color(0xFF1000D3), Color(0xFF1A6BFF)], // Cores base do gradiente
-                    begin: Alignment.topCenter, // Início do gradiente (cima)
-                    end: Alignment.bottomCenter, // Fim do gradiente (baixo)
-                  ),
-                  borderRadius: BorderRadius.circular(8), // Adicione bordas arredondadas conforme necessário
-                ),
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => JurosCompostos()),
-                    );
-                  },
-                  child: Container(
-                    width: 250,
-                    height: 70,
-                    alignment: Alignment.center,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.auto_graph, // Ícone de gráfico automático
-                          color: Colors.white, // Cor do ícone
-                        ),
-                        SizedBox(width: 15), // Espaçamento entre o ícone e o texto
-                        Text(
-                          'Simular juros\ncompostos',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white, // Cor do texto branca para melhor contraste
-                          ),
-                        ),
-                      ],
+      body: Padding(
+        padding: EdgeInsets.only(right: 2), // Adiciona espaço à direita da tela
+        child: Scrollbar(
+          thumbVisibility: true, // Define para sempre mostrar a barra de rolagem
+          child: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                // Texto na parte superior da tela
+                Padding(
+                  padding: const EdgeInsets.only(top: 50.0),
+                  child: Text(
+                    'Obrigado pelo acesso, $userName!',
+                    textAlign: TextAlign.left,
+                    style: const TextStyle(
+                      fontSize: 17, // Tamanho da fonte desejado
+                      // Outras propriedades de estilo podem ser adicionadas aqui, se necessário
                     ),
                   ),
                 ),
-              ),
+                const SizedBox(height: 50), // Espaçamento entre o texto e os botões
 
 
-              const SizedBox(height: 20), // Espaçamento entre os botões
-
-              Ink(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Color(0xFF1000D3), Color(0xFF1A6BFF)], // Cores base do gradiente
-                    begin: Alignment.topCenter, // Início do gradiente (cima)
-                    end: Alignment.bottomCenter, // Fim do gradiente (baixo)
+                Ink(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Color(0xFF1000D3), Color(0xFF1A6BFF)], // Cores base do gradiente
+                      begin: Alignment.topCenter, // Início do gradiente (cima)
+                      end: Alignment.bottomCenter, // Fim do gradiente (baixo)
+                    ),
+                    borderRadius: BorderRadius.circular(8), // Adicione bordas arredondadas conforme necessário
                   ),
-                  borderRadius: BorderRadius.circular(8), // Adicione bordas arredondadas conforme necessário
-                ),
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Glossario()),
-                    );
-                  },
-                  child: Container(
-                    width: 250,
-                    height: 70,
-                    alignment: Alignment.center,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.text_snippet_outlined, // Ícone de snippet de texto
-                          color: Colors.white, // Cor do ícone
-                        ),
-                        SizedBox(width: 15), // Espaçamento entre o ícone e o texto
-                        Text(
-                          'Glossário sobre\nEducação Financeira',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white, // Cor do texto branca para melhor contraste
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => JurosCompostos()),
+                      );
+                    },
+                    child: Container(
+                      width: 250,
+                      height: 70,
+                      alignment: Alignment.center,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.auto_graph, // Ícone de gráfico automático
+                            color: Colors.white, // Cor do ícone
                           ),
-                        ),
-                      ],
+                          SizedBox(width: 15), // Espaçamento entre o ícone e o texto
+                          Text(
+                            'Simular juros\ncompostos',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white, // Cor do texto branca para melhor contraste
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
 
-              const SizedBox(height: 20),
 
-              Ink(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Color(0xFF1000D3), Color(0xFF1A6BFF)], // Cores base do gradiente
-                    begin: Alignment.topCenter, // Início do gradiente (cima)
-                    end: Alignment.bottomCenter, // Fim do gradiente (baixo)
+                const SizedBox(height: 20), // Espaçamento entre os botões
+
+                Ink(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Color(0xFF1000D3), Color(0xFF1A6BFF)], // Cores base do gradiente
+                      begin: Alignment.topCenter, // Início do gradiente (cima)
+                      end: Alignment.bottomCenter, // Fim do gradiente (baixo)
+                    ),
+                    borderRadius: BorderRadius.circular(8), // Adicione bordas arredondadas conforme necessário
                   ),
-                  borderRadius: BorderRadius.circular(8), // Adicione bordas arredondadas conforme necessário
-                ),
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => DicasFinanceiras()),
-                    );
-                  },
-                  child: Container(
-                    width: 250,
-                    height: 70,
-                    alignment: Alignment.center,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.thumb_up_alt_outlined, // Ícone de snippet de texto
-                          color: Colors.white, // Cor do ícone
-                        ),
-                        SizedBox(width: 15), // Espaçamento entre o ícone e o texto
-                        Text(
-                          textAlign: TextAlign.center,
-                          'Dicas de\nEducação Financeira',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white, // Cor do texto branca para melhor contraste
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Glossario()),
+                      );
+                    },
+                    child: Container(
+                      width: 250,
+                      height: 70,
+                      alignment: Alignment.center,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.text_snippet_outlined, // Ícone de snippet de texto
+                            color: Colors.white, // Cor do ícone
                           ),
-                        ),
-                      ],
+                          SizedBox(width: 15), // Espaçamento entre o ícone e o texto
+                          Text(
+                            'Glossário sobre\nEducação Financeira',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white, // Cor do texto branca para melhor contraste
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
 
-              const SizedBox(height: 20),
+                const SizedBox(height: 20),
 
-              Ink(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Color(0xFF1000D3), Color(0xFF1A6BFF)], // Cores base do gradiente
-                    begin: Alignment.topCenter, // Início do gradiente (cima)
-                    end: Alignment.bottomCenter, // Fim do gradiente (baixo)
+                Ink(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Color(0xFF1000D3), Color(0xFF1A6BFF)], // Cores base do gradiente
+                      begin: Alignment.topCenter, // Início do gradiente (cima)
+                      end: Alignment.bottomCenter, // Fim do gradiente (baixo)
+                    ),
+                    borderRadius: BorderRadius.circular(8), // Adicione bordas arredondadas conforme necessário
                   ),
-                  borderRadius: BorderRadius.circular(8), // Adicione bordas arredondadas conforme necessário
-                ),
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Indicacoes()),
-                    );
-                  },
-                  child: Container(
-                    width: 250,
-                    height: 70,
-                    alignment: Alignment.center,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.add_chart_outlined, // Ícone de pontuação, você pode alterar para o ícone desejado
-                          color: Colors.white, // Cor do ícone
-                        ),
-                        SizedBox(width: 15), // Espaçamento entre o ícone e o texto
-                        Text(
-                          'Indicações',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white, // Cor do texto branca para melhor contraste
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => DicasFinanceiras()),
+                      );
+                    },
+                    child: Container(
+                      width: 250,
+                      height: 70,
+                      alignment: Alignment.center,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.thumb_up_alt_outlined, // Ícone de snippet de texto
+                            color: Colors.white, // Cor do ícone
                           ),
-                        ),
-                      ],
+                          SizedBox(width: 15), // Espaçamento entre o ícone e o texto
+                          Text(
+                            textAlign: TextAlign.center,
+                            'Dicas de\nEducação Financeira',
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white, // Cor do texto branca para melhor contraste
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
 
+                const SizedBox(height: 20),
 
-
-              const SizedBox(height: 20),
-
-              Ink(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Color(0xFF1000D3),Color(0xFF1A6BFF)], // Cores base do gradiente
-                    begin: Alignment.topCenter, // Início do gradiente (cima)
-                    end: Alignment.bottomCenter, // Fim do gradiente (baixo)
+                Ink(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Color(0xFF1000D3), Color(0xFF1A6BFF)], // Cores base do gradiente
+                      begin: Alignment.topCenter, // Início do gradiente (cima)
+                      end: Alignment.bottomCenter, // Fim do gradiente (baixo)
+                    ),
+                    borderRadius: BorderRadius.circular(8), // Adicione bordas arredondadas conforme necessário
                   ),
-                  borderRadius: BorderRadius.circular(8), // Adicione bordas arredondadas conforme necessário
-                ),
-                child: InkWell(
-                  onTap: () async {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Orientador()),
-                    );
-                  },
-                  child: Container(
-                    width: 250,
-                    height: 70,
-                    alignment: Alignment.center,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.person_add_outlined, // Ícone de uma pessoa, você pode mudar para o ícone desejado
-                          color: Colors.white, // Cor do ícone
-                        ),
-                        SizedBox(width: 15), // Espaçamento entre o ícone e o texto
-                        Text(
-                          'Contatar um\nOrientador Financeiro',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white, // Cor do texto branca para melhor contraste
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Indicacoes()),
+                      );
+                    },
+                    child: Container(
+                      width: 250,
+                      height: 70,
+                      alignment: Alignment.center,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.add_chart_outlined, // Ícone de pontuação, você pode alterar para o ícone desejado
+                            color: Colors.white, // Cor do ícone
                           ),
-                        ),
-                      ],
+                          SizedBox(width: 15), // Espaçamento entre o ícone e o texto
+                          Text(
+                            'Indicações',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white, // Cor do texto branca para melhor contraste
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
 
+                const SizedBox(height: 20),
 
-              const SizedBox(height: 20), // Espaçamento entre os botões // Espaçamento entre os botões
-
-              Ink(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Color(0xFF1000D3), Color(0xFF1A6BFF)], // Cores base do gradiente
-                    begin: Alignment.topCenter, // Início do gradiente (cima)
-                    end: Alignment.bottomCenter, // Fim do gradiente (baixo)
+                Ink(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Color(0xFF1000D3), Color(0xFF1A6BFF)],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                  borderRadius: BorderRadius.circular(8), // Adicione bordas arredondadas conforme necessário
-                ),
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Doacao()),
-                    );
-                  },
-                  child: Container(
-                    width: 250,
-                    height: 70,
-                    alignment: Alignment.center,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.attach_money_outlined, // Ícone de dinheiro
-                          color: Colors.white, // Cor do ícone
-                        ),
-                        SizedBox(width: 10), // Espaçamento entre o ícone e o texto
-                        Text(
-                          'Doação ao projeto',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white, // Cor do texto branca para melhor contraste
+                  child: InkWell(
+                    onTap: () {
+                      if (userName == 'Usuário Anônimo') {
+                        // Exibir o aviso personalizado se o userName for "Usuário Anônimo"
+                        _showCustomSnackBar(context, 'Você precisa fazer login com sua conta do Gmail para acessar esta tela.');
+                      } else {
+                        // Se userName for diferente de "Usuário Anônimo", permitir acesso normalmente
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Metas()),
+                        );
+                      }
+                    },
+                    child: Container(
+                      width: 250,
+                      height: 70,
+                      alignment: Alignment.center,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.task_alt_outlined,
+                            color: Colors.white,
                           ),
-                        ),
-                      ],
+                          SizedBox(width: 15),
+                          Text(
+                            'Metas Financeiras',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
 
-              const SizedBox(height: 20),
 
-              // Texto na parte inferior da tela
-              Padding(
-                padding: const EdgeInsets.only(top: 30.0, bottom: 20.0), // Adicione um espaçamento inferior para separar o texto do rodapé
-                child: Text(
-                  'Para maior eficácia do aprendizado:\n'
-                      '- Utilize este app semanalmente;\n'
-                      '- Acesse todas as opções disponíveis;\n'
-                      '- Domine cada conteúdo existente;\n'
-                      '- Busque outras fontes de conhecimento.',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontSize: 16, // Tamanho da fonte desejado
-                    // Outras propriedades de estilo podem ser adicionadas aqui, se necessário
+
+                const SizedBox(height: 20),
+
+                Ink(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Color(0xFF1000D3),Color(0xFF1A6BFF)], // Cores base do gradiente
+                      begin: Alignment.topCenter, // Início do gradiente (cima)
+                      end: Alignment.bottomCenter, // Fim do gradiente (baixo)
+                    ),
+                    borderRadius: BorderRadius.circular(8), // Adicione bordas arredondadas conforme necessário
+                  ),
+                  child: InkWell(
+                    onTap: () async {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Orientador()),
+                      );
+                    },
+                    child: Container(
+                      width: 250,
+                      height: 70,
+                      alignment: Alignment.center,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.person_add_outlined, // Ícone de uma pessoa, você pode mudar para o ícone desejado
+                            color: Colors.white, // Cor do ícone
+                          ),
+                          SizedBox(width: 15), // Espaçamento entre o ícone e o texto
+                          Text(
+                            'Contatar um\nOrientador Financeiro',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white, // Cor do texto branca para melhor contraste
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 30),
-            ],
+
+                const SizedBox(height: 20), // Espaçamento entre os botões // Espaçamento entre os botões
+
+                Ink(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Color(0xFF1000D3), Color(0xFF1A6BFF)], // Cores base do gradiente
+                      begin: Alignment.topCenter, // Início do gradiente (cima)
+                      end: Alignment.bottomCenter, // Fim do gradiente (baixo)
+                    ),
+                    borderRadius: BorderRadius.circular(8), // Adicione bordas arredondadas conforme necessário
+                  ),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Doacao()),
+                      );
+                    },
+                    child: Container(
+                      width: 250,
+                      height: 70,
+                      alignment: Alignment.center,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.attach_money_outlined, // Ícone de dinheiro
+                            color: Colors.white, // Cor do ícone
+                          ),
+                          SizedBox(width: 10), // Espaçamento entre o ícone e o texto
+                          Text(
+                            'Doação ao projeto',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white, // Cor do texto branca para melhor contraste
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                // Texto na parte inferior da tela
+                Padding(
+                  padding: const EdgeInsets.only(top: 30.0, bottom: 20.0), // Adicione um espaçamento inferior para separar o texto do rodapé
+                  child: Text(
+                    'Para maior eficácia do aprendizado:\n'
+                        '- Utilize este app semanalmente;\n'
+                        '- Acesse todas as opções disponíveis;\n'
+                        '- Domine cada conteúdo existente;\n'
+                        '- Busque outras fontes de conhecimento.',
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontSize: 16, // Tamanho da fonte desejado
+                      // Outras propriedades de estilo podem ser adicionadas aqui, se necessário
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 30),
+              ],
+            ),
+          ),
           ),
         ),
       ),
@@ -462,6 +545,23 @@ class MyDrawer extends StatelessWidget {
                 Icon(Icons.add_chart_outlined),
                 SizedBox(width: 17), // Espaço entre o ícone e o texto
                 Text('Indicações'),
+              ],
+            ),
+          ),
+
+          ListTile(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => Metas(),
+                ),
+              );
+            },
+            title: Row(
+              children: [
+                Icon(Icons.task_alt_outlined),
+                SizedBox(width: 17), // Espaço entre o ícone e o texto
+                Text('Metas Financeiras'),
               ],
             ),
           ),
