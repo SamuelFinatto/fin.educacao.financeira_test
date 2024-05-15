@@ -282,7 +282,9 @@ class HomePage extends StatelessWidget {
                         // Se userName for diferente de "Usuário Anônimo", permitir acesso normalmente
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => Metas()),
+                          MaterialPageRoute(
+                              builder: (context) => Metas(email: this.email)
+                          ), // Passando o email como argumento
                         );
                       }
                     },
@@ -553,7 +555,7 @@ class MyDrawer extends StatelessWidget {
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => Metas(),
+                  builder: (context) => Metas(email: this.email), // Passando o email como argumento
                 ),
               );
             },
