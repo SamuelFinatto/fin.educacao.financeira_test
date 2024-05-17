@@ -48,7 +48,36 @@ class _SobreState extends State<Sobre> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.0),
             child: Text(
-              '\nDesenvolvedor:',
+              '\nPágina oficial:',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          SizedBox(height: 7),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.0),
+            child: GestureDetector(
+              onTap: () {
+                _launchURL('https://www.instagram.com/fineducacaofinanceira');
+              },
+              child: Text(
+                '@FinEducaçãoFinanceira',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.blue, // Cor azul para indicar um link
+                  decoration: TextDecoration.underline, // Adiciona sublinhado para indicar que é um link
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 7),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.0),
+            child: Text(
+              '\nE-mail:',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -110,10 +139,11 @@ class _SobreState extends State<Sobre> {
       scheme: 'mailto',
       path: emailAddress,
     );
-    if (await canLaunch(_emailLaunchUri.toString())) {
       await launch(_emailLaunchUri.toString());
-    } else {
-      throw 'Não foi possível abrir o cliente de e-mail';
-    }
+  }
+
+  // Função para abrir URLs
+  _launchURL(String url) async {
+      await launch(url);
   }
 }

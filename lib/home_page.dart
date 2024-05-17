@@ -301,7 +301,7 @@ class HomePage extends StatelessWidget {
                           ),
                           SizedBox(width: 15),
                           Text(
-                            'Metas Financeiras',
+                            'Metas e Investimentos',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 18,
@@ -563,7 +563,7 @@ class MyDrawer extends StatelessWidget {
               children: [
                 Icon(Icons.task_alt_outlined),
                 SizedBox(width: 17), // Espaço entre o ícone e o texto
-                Text('Metas Financeiras'),
+                Text('Metas e Investimentos'),
               ],
             ),
           ),
