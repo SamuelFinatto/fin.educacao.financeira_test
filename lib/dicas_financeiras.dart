@@ -107,7 +107,7 @@ class _DicasFinanceirasState extends State<DicasFinanceiras> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Dicas de Educação Financeira'),
+        title: Text('Dicas Financeiras'),
         backgroundColor: Colors.green.shade800,actions: [
           IconButton(
             icon: Icon(Icons.close),
@@ -124,7 +124,8 @@ class _DicasFinanceirasState extends State<DicasFinanceiras> {
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 15.0),
             child: Text(
-              'Aproveite as dicas que preparamos para planejar seu futuro financeiro no curto, médio e longo prazo!',
+              "Aproveite as dicas que preparamos para planejar seu futuro financeiro no curto, médio e longo prazo."
+                  "\nDissemine essas informações com pessoas próximas de você para que o futuro financeiro de todos possa melhorar!",
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w400,

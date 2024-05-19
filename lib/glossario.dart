@@ -16,6 +16,55 @@ class _GlossariosState extends State<Glossario> {
       appBar: AppBar(
         title: const Text('Glossário'),
         backgroundColor: Colors.green.shade800,
+        actions: [
+          Container(
+            margin: EdgeInsets.only(right: 10.0),
+            child: IconButton(
+              icon: Icon(Icons.info_outline),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Explicando a tela Glossário:"),
+                      insetPadding: EdgeInsets.symmetric(horizontal: 10.0), // Adiciona preenchimento ao redor do conteúdo
+                      content: SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.25, // Defina a altura desejada
+                        child: Scrollbar(
+                          thumbVisibility: true, // Torna a barra de rolagem sempre visível
+                          child: SingleChildScrollView(
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 7.0), // Adiciona um espaçamento de 5 pixeis na parte direita
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Esta tela é destinada a explicar diversos conceitos do mundo financeiro e o impacto de cada um em nossas vidas."
+                                        "\nPara visualizar ou fechar cada um dos conteúdos, basta clicar no tópico da sua preferência."
+                                        "\n\nAproveite para aprender e disseminar esse conteúdo com pessoas próximas de você!",
+                                    textAlign: TextAlign.justify,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text("Fechar"),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        ],
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection(collectionName).orderBy('titulo').snapshots(),

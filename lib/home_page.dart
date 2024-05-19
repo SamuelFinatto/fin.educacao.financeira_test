@@ -206,7 +206,7 @@ class HomePage extends StatelessWidget {
                           SizedBox(width: 15), // Espaçamento entre o ícone e o texto
                           Text(
                             textAlign: TextAlign.center,
-                            'Dicas de\nEducação Financeira',
+                            'Dicas Financeiras',
                             style: TextStyle(
                               fontSize: 18,
                               color: Colors.white, // Cor do texto branca para melhor contraste
@@ -529,7 +529,7 @@ class MyDrawer extends StatelessWidget {
               children: [
                 Icon(Icons.thumb_up_alt_outlined),
                 SizedBox(width: 17), // Espaço entre o ícone e o texto
-                Text('Dicas de\nEducação Financeira'),
+                Text('Dicas Financeiras'),
               ],
             ),
           ),
