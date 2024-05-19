@@ -551,13 +551,15 @@ class MyDrawer extends StatelessWidget {
             ),
           ),
 
-          ListTile(
+          userName != 'Usuário Anônimo'
+              ? ListTile(
             onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => Metas(email: this.email), // Passando o email como argumento
-                ),
-              );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Metas(email: this.email)
+                  ), // Passando o email como argumento
+                );
             },
             title: Row(
               children: [
@@ -566,7 +568,8 @@ class MyDrawer extends StatelessWidget {
                 Text('Metas e Investimentos'),
               ],
             ),
-          ),
+          )
+              : SizedBox.shrink(), // Não exibir nada se o userName for "Usuário Anônimo"
 
           ListTile(
             onTap: () {
