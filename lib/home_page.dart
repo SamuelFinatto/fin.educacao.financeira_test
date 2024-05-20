@@ -74,7 +74,7 @@ class HomePage extends StatelessWidget {
               children: <Widget>[
                 // Texto na parte superior da tela
                 Padding(
-                  padding: const EdgeInsets.only(top: 50.0),
+                  padding: const EdgeInsets.only(top: 40.0),
                   child: Text(
                     'Obrigado pelo acesso, $userName!',
                     textAlign: TextAlign.left,
@@ -84,7 +84,7 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 50), // Espaçamento entre o texto e os botões
+                const SizedBox(height: 35), // Espaçamento entre o texto e os botões
 
 
                 Ink(
@@ -465,15 +465,24 @@ class MyDrawer extends StatelessWidget {
                   fontSize: 16, // Define o tamanho da fonte para 16
                 ),
               ),
-              accountEmail: Text('$email'),
+              accountEmail: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('$email'),
+                  //SizedBox(height: 0), // Definindo altura como 0 para remover o espaço em branco
+                ],
+              ),
               // currentAccountPicture: CircleAvatar(
               //   backgroundImage: AssetImage('assets/images/perfil_transparente_com_sombra.png'),
               // ),
               decoration: BoxDecoration(
                 color: Colors.green.shade800, // Define a cor de fundo como azul
               ),
+              //margin: EdgeInsets.zero, // Remove o espaçamento externo do UserAccountsDrawerHeader
             ),
           ),
+
+
 
 
           // ListTile(

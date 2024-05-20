@@ -135,6 +135,7 @@ class _IndicacoesState extends State<Indicacoes> {
                   fontSize: 18,
                   fontWeight: FontWeight.w400, // Título em negrito
                 ),
+                textAlign: TextAlign.justify, // Define o alinhamento do texto como justificado
               ),
             ),
             const SizedBox(height: 20),

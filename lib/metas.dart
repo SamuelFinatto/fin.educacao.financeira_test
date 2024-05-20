@@ -603,8 +603,7 @@ class _MetasState extends State<Metas> {
             ),
             SizedBox(height: 10),
             Container(
-              height: MediaQuery.of(context).size.height *
-                  0.4, // 40% da altura da tela
+              height: MediaQuery.of(context).size.height - 450, // 40% da altura da tela
               child: FutureBuilder<QuerySnapshot>(
                 future: FirebaseFirestore.instance
                     .collection('metas')
@@ -643,7 +642,7 @@ class _MetasState extends State<Metas> {
                             title: Text(
                               "Em ${data['periodo']} ${data['tipoperiodo']}"
                               "\nValor de: $valorFormatado"
-                              "\nData fim: $dataFimFormatada",
+                              "\nData esperada: $dataFimFormatada",
                             ),
                             trailing: IconButton(
                               icon: Icon(Icons.delete),

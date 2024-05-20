@@ -79,7 +79,7 @@ class _JurosCompostosState extends State<JurosCompostos> {
     isStrokeCapRound: true,
     dotData: FlDotData(show: false),
     belowBarData: BarAreaData(show: false),
-    spots: _calculateSpotsDinheiroAcumulado(_controller3.text.isEmpty ? 0.0 : (double.parse(_controller3.text))/100),
+    spots: _calculateSpotsDinheiroAcumulado(_controller3.text.isEmpty ? 0.00 : (double.parse(_controller3.text))/100),
   );
 
   LineChartBarData get lineChartBarData1_2 => LineChartBarData(
@@ -89,7 +89,7 @@ class _JurosCompostosState extends State<JurosCompostos> {
     isStrokeCapRound: true,
     dotData: FlDotData(show: false),
     belowBarData: BarAreaData(show: false),
-    spots: _calculateSpotsTotalJuros(_controller3.text.isEmpty ? 0.0 : (double.parse(_controller3.text))/100),
+    spots: _calculateSpotsTotalJuros(_controller3.text.isEmpty ? 0.00 : (double.parse(_controller3.text))/100),
   );
 
   LineChartBarData get lineChartBarData1_3 => LineChartBarData(
@@ -99,19 +99,19 @@ class _JurosCompostosState extends State<JurosCompostos> {
     isStrokeCapRound: true,
     dotData: FlDotData(show: false),
     belowBarData: BarAreaData(show: false),
-    spots: _calculateSpotsDinheiroInvestido(_controller3.text.isEmpty ? 0.0 : (double.parse(_controller3.text))/100),
+    spots: _calculateSpotsDinheiroInvestido(_controller3.text.isEmpty ? 0.00 : (double.parse(_controller3.text))/100),
   );
 
 
   @override
   Widget build(BuildContext context) {
     double valorIntervaloGrafico = 10000;
-    double intervaloHorizontal = 1;
-    double valorMinY = 0;
-    double valorMaxY = 100;
-    double valorMaxYaux = 0;
-    double valorAcumJuros = 0;
-    double valorAcumInvest = 0;
+    double intervaloHorizontal = 1.0;
+    double valorMinY = 0.00;
+    double valorMaxY = 100.0;
+    double valorMaxYaux = 0.00;
+    double valorAcumJuros = 0.00;
+    double valorAcumInvest = 0.00;
     String valorPeriodo = _controller4.text.isEmpty ? '1' : _controller4.text;
     double keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
 
@@ -328,7 +328,8 @@ class _JurosCompostosState extends State<JurosCompostos> {
                         ),
                         SizedBox(width: 10), // Espaçamento entre a linha e o valor monetário
                         Text(
-                          'R\$${NumberFormat.currency(locale: 'pt_BR', symbol: '').format(valorMaxYaux - valorAcumInvest)}', // Formata o valor para dinheiro BR
+                          'R\$${NumberFormat.currency(locale: 'pt_BR', symbol: '').format(max(valorMaxYaux - valorAcumInvest, 0))}', // Formata o valor para dinheiro BR
+
                           style: TextStyle(
                             fontWeight: FontWeight.w400,
                             fontSize: 18, // Tamanho da fonte para o valor monetário
@@ -373,7 +374,7 @@ class _JurosCompostosState extends State<JurosCompostos> {
                                 topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
                                 leftTitles: AxisTitles(sideTitles: SideTitles(
                                     showTitles: true,
-                                    reservedSize: (valorMaxY > 500 ? 8 : 11)*(((valorMaxY / 100).ceil() * 100).toString()).length.toDouble(),
+                                    reservedSize: (valorMaxY > 500 ? 10 : 11)*(((valorMaxY / 100).ceil() * 100).toString()).length.toDouble(),
                                     interval: (valorMaxY < 5000 ? (valorMaxY / 2) : (valorMaxY / 5))
                                 )),
                                 bottomTitles: AxisTitles(sideTitles: SideTitles(
@@ -677,8 +678,8 @@ class _JurosCompostosState extends State<JurosCompostos> {
     double valorInvestidoMensal = double.tryParse(_controller2.text.replaceAll('.', '').replaceAll(',', '.').replaceAll('R\$', '')) ?? 0.0;
     double interest = valorInvestidoInicial; // Inicialize o interesse como 0.0
     double totalJuros = 0.0;
-    double tempoMeses = _controller4.text.isEmpty ? 12 : double.parse(_controller4.text) * 12;
-    double tempoAnos = _controller4.text.isEmpty ? 12 : double.parse(_controller4.text);
+    double tempoMeses = _controller4.text.isEmpty ? 0 : double.parse(_controller4.text) * 12;
+    double tempoAnos = _controller4.text.isEmpty ? 0 : double.parse(_controller4.text);
     double yValuePontoI = 0.0;
     if (_controller1.text.isNotEmpty && _controller2.text.isNotEmpty && _controller4.text.isNotEmpty) {
       if (tempoMeses <= 120) {
@@ -719,8 +720,8 @@ class _JurosCompostosState extends State<JurosCompostos> {
     double valorInvestidoInicial = double.tryParse(_controller1.text.replaceAll('.', '').replaceAll(',', '.').replaceAll('R\$', '')) ?? 0.0;
     double valorInvestidoMensal = double.tryParse(_controller2.text.replaceAll('.', '').replaceAll(',', '.').replaceAll('R\$', '')) ?? 0.0;
     double interest = valorInvestidoInicial; // Inicialize o interesse como 0.0
-    double tempoMeses = _controller4.text.isEmpty ? 12 : double.parse(_controller4.text) * 12;
-    double tempoAnos = _controller4.text.isEmpty ? 12 : double.parse(_controller4.text);
+    double tempoMeses = _controller4.text.isEmpty ? 0 : double.parse(_controller4.text) * 12;
+    double tempoAnos = _controller4.text.isEmpty ? 0 : double.parse(_controller4.text);
 
     if (_controller1.text.isNotEmpty && _controller2.text.isNotEmpty  && _controller4.text.isNotEmpty) {
       if (tempoMeses <= 120) {
@@ -749,8 +750,8 @@ class _JurosCompostosState extends State<JurosCompostos> {
     double taxaJuros = rate;
     double taxaAnual = taxaJuros; // Convertendo taxa mensal para taxa anual equivalente
     int n = 12; // Juros compostos mensais (considerando 12 meses por ano)
-    double tempoMeses = _controller4.text.isEmpty ? 12 : double.parse(_controller4.text) * 12;
-    double tempoAnos = _controller4.text.isEmpty ? 12 : double.parse(_controller4.text);
+    double tempoMeses = _controller4.text.isEmpty ? 0 : double.parse(_controller4.text) * 12;
+    double tempoAnos = _controller4.text.isEmpty ? 0 : double.parse(_controller4.text);
 
     if (_controller1.text.isNotEmpty && _controller2.text.isNotEmpty && _controller4.text.isNotEmpty) {
       double jurosCompostos = 0.0;

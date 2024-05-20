@@ -22,13 +22,16 @@ class _DicasFinanceirasState extends State<DicasFinanceiras> {
     super.initState();
     _carregarDicasFinanceiras(); // Carregar os conteúdos ao iniciar a tela
     _pageController = PageController(
-        initialPage: _currentIndex); // Inicializamos o PageController com o índice atual
+        initialPage:
+            _currentIndex); // Inicializamos o PageController com o índice atual
   }
 
   void _carregarDicasFinanceiras() {
-    FirebaseFirestore.instance.collection(collectionName)
+    FirebaseFirestore.instance
+        .collection(collectionName)
         .where('status',
-        isEqualTo: true) // Filtra apenas os documentos com status verdadeiro
+            isEqualTo:
+                true) // Filtra apenas os documentos com status verdadeiro
         .get()
         .then((snapshot) {
       setState(() {
@@ -86,7 +89,6 @@ class _DicasFinanceirasState extends State<DicasFinanceiras> {
     );
   }
 
-
   Widget _buildPageView() {
     return PageView.builder(
       itemCount: dicasFinanceirasList.length,
@@ -108,12 +110,16 @@ class _DicasFinanceirasState extends State<DicasFinanceiras> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Dicas Financeiras'),
-        backgroundColor: Colors.green.shade800,actions: [
-          IconButton(
-            icon: Icon(Icons.close),
-            onPressed: () {
-              Navigator.pop(context); // Volta para a tela anterior
-            },
+        backgroundColor: Colors.green.shade800,
+        actions: [
+          Container(
+            margin: EdgeInsets.only(right: 10.0),
+            child: IconButton(
+              icon: Icon(Icons.close),
+              onPressed: () {
+                Navigator.pop(context); // Volta para a tela anterior
+              },
+            ),
           ),
         ],
       ),
@@ -124,8 +130,7 @@ class _DicasFinanceirasState extends State<DicasFinanceiras> {
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 15.0),
             child: Text(
-              "Aproveite as dicas que preparamos para planejar seu futuro financeiro no curto, médio e longo prazo."
-                  "\nDissemine essas informações com pessoas próximas de você para que o futuro financeiro de todos possa melhorar!",
+              "Aproveite as dicas que preparamos para planejar seu futuro financeiro no curto, médio e longo prazo.",
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
@@ -134,15 +139,9 @@ class _DicasFinanceirasState extends State<DicasFinanceiras> {
                   .justify, // Define o alinhamento do texto como justificado
             ),
           ),
-          SizedBox(height: MediaQuery
-              .of(context)
-              .size
-              .height * 0.06),
+          SizedBox(height: MediaQuery.of(context).size.height * 0.03),
           Container(
-            height: MediaQuery
-                .of(context)
-                .size
-                .height * 0.54, // Define a altura como 70% da altura da tela
+            height: MediaQuery.of(context).size.height * 0.54, // Define a altura como 70% da altura da tela
             child: PageView.builder(
               itemCount: dicasFinanceirasList.length,
               controller: _pageController,
@@ -158,7 +157,6 @@ class _DicasFinanceirasState extends State<DicasFinanceiras> {
           ),
         ],
       ),
-
       drawer: Drawer(
         child: Column(
           children: <Widget>[
@@ -166,11 +164,12 @@ class _DicasFinanceirasState extends State<DicasFinanceiras> {
               height: 120, // Define a altura desejada para o DrawerHeader
               child: DrawerHeader(
                 decoration: BoxDecoration(
-                  color: Colors.green.shade800, // Define a cor de fundo como verde
+                  color:
+                      Colors.green.shade800, // Define a cor de fundo como verde
                 ),
                 child: Center(
                   child: Text(
-                    'Dicas de Educação Financeira',
+                    'Dicas Financeiras',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -180,45 +179,45 @@ class _DicasFinanceirasState extends State<DicasFinanceiras> {
                 ),
               ),
             ),
-            // Aqui você pode adicionar as opções do Drawer
-            ListView.builder(
-              shrinkWrap: true, // Garante que a ListView não tente ocupar mais espaço do que precisa
-              itemCount: dicasFinanceirasList.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: EdgeInsets.only(bottom: 15), // Adiciona espaçamento inferior
-                  child: ListTile(
-                    title: Text(
-                      dicasFinanceirasList[index]['titulo'],
-                      style: TextStyle(
-                        fontSize: 15, // Define o tamanho da fonte
+            // Espaço entre os botões
+            Expanded(
+              child: Scrollbar(
+                thumbVisibility: false, // Torna a barra de rolagem visível
+                child: ListView.builder(
+                  padding: EdgeInsets.zero, // Remove padding padrão da ListView
+                  itemCount: dicasFinanceirasList.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+                      // Ajusta o padding superior/inferior
+                      child: ListTile(
+                        title: Text(
+                          '${index + 1}. ${dicasFinanceirasList[index]['titulo']}',
+                          style: TextStyle(
+                            fontSize: 16, // Define o tamanho da fonte
+                          ),
+                        ),
+                        onTap: () {
+                          _pageController.jumpToPage(
+                            index,
+                          ); // Navegue para a página correspondente
+                          Navigator.pop(context); // Feche o Drawer
+                        },
                       ),
-                    ),
-                    onTap: () {
-                      _pageController.jumpToPage(
-                        index,
-                      ); // Navegue para a página correspondente
-                      Navigator.pop(context); // Feche o Drawer
-                    },
-                  ),
-                );
-              },
+                    );
+                  },
+                ),
+              ),
             ),
           ],
         ),
       ),
-
-
-
-
-
-
       bottomNavigationBar: Container(
         height: 90, // Define a altura desejada para a barra
         child: BottomAppBar(
           elevation: 0, // Remove a sombra do BottomAppBar
-          color: Theme
-              .of(context)
+          color: Theme.of(context)
               .scaffoldBackgroundColor, // Use a cor de fundo da tela principal
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
