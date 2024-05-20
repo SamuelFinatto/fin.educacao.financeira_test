@@ -29,7 +29,20 @@ class _IndicacoesState extends State<Indicacoes> {
           .where('status', isEqualTo: true) // Filtra apenas os documentos com status verdadeiro
           .get();
       setState(() {
-        indicacoesList = snapshot.docs.map((doc) => doc.data()).toList();
+        indicacoesList = snapshot.docs.map((doc) {
+          var data = doc.data();
+          data['categoria'] = data['categoria'] ?? 'Outros'; // Adicione a categoria com valor padrão
+          return data;
+        }).toList();
+
+        // Ordena a lista de indicações primeiro por categoria e depois por título
+        indicacoesList.sort((a, b) {
+          int categoriaCompare = a['categoria'].compareTo(b['categoria']);
+          if (categoriaCompare == 0) {
+            return a['titulo'].compareTo(b['titulo']);
+          }
+          return categoriaCompare;
+        });
       });
 
       // Verificações adicionadas para depurar
@@ -71,81 +84,115 @@ class _IndicacoesState extends State<Indicacoes> {
   }
 
   List<Widget> _construirListaDeBotoes() {
-    return indicacoesList.map((conteudo) {
-      String titulo = conteudo['titulo'] ?? 'Sem título';
-      String url = conteudo['url'] ?? ''; // Defina uma URL padrão se não houver URL fornecida
-      return Padding(
+    Map<String, List<Map<String, dynamic>>> categorias = {};
+
+    for (var conteudo in indicacoesList) {
+      String categoria = conteudo['categoria'] ?? 'Outros';
+      if (!categorias.containsKey(categoria)) {
+        categorias[categoria] = [];
+      }
+      categorias[categoria]!.add(conteudo);
+    }
+
+    List<Widget> widgets = [];
+
+    // Ordenar as categorias alfabeticamente
+    var categoriasOrdenadas = categorias.keys.toList()..sort();
+
+    for (var categoria in categoriasOrdenadas) {
+      widgets.add(Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
-        child: ElevatedButton(
-          onPressed: () {
-            _confirmarAbrirURL(url, titulo);
-          },
-          style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.white,
-            backgroundColor: Color(0xFF004086),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            minimumSize: Size(double.infinity, 45), // Define uma altura mínima de 45
-            padding: EdgeInsets.all(10), // Adicione algum preenchimento interno para evitar que o texto toque nas bordas
-          ),
-          child: Row(
-            children: [
-              Image.asset(
-                'assets/images/internet.png', // Caminho para a imagem nos ativos
-                width: 38, // Largura desejada para o ícone
-                height: 38, // Altura desejada para o ícone
-              ),
-              SizedBox(width: 10), // Espaçamento entre o ícone e o texto
-              Flexible( // Use Flexible para permitir que o Text se ajuste dinamicamente ao espaço disponível
-                child: Text(
-                  titulo,
-                  style: const TextStyle(
-                    fontSize: 17,
-                  ),
-                ),
-              ),
-            ],
+        child: Text(
+          categoria,
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
           ),
         ),
-      );
-    }).toList();
-  }
+      ));
+      var itens = categorias[categoria]!;
+      itens.sort((a, b) => a['titulo'].compareTo(b['titulo']));
+      widgets.addAll(itens.map((conteudo) {
+        String titulo = conteudo['titulo'] ?? 'Sem título';
+        String url = conteudo['url'] ?? '';
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+          child: ElevatedButton(
+            onPressed: () {
+              _confirmarAbrirURL(url, titulo);
+            },
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.white,
+              backgroundColor: Color(0xFF004086),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              minimumSize: Size(double.infinity, 45),
+              padding: EdgeInsets.all(10),
+            ),
+            child: Row(
+              children: [
+                Image.asset(
+                  'assets/images/internet.png',
+                  width: 38,
+                  height: 38,
+                ),
+                SizedBox(width: 10),
+                Flexible(
+                  child: Text(
+                    titulo,
+                    style: const TextStyle(
+                      fontSize: 17,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }).toList());
+    }
 
+    return widgets;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Indicações'),
-        backgroundColor: Colors.green.shade800, // Defina a cor desejada para a barra superior desta tela
+        backgroundColor: Colors.green.shade800,
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            const SizedBox(height: 20),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.0),
-              child: Text(
-                'Aproveite as indicações para descobrir mais sobre Educação Financeira e ficar atualizado.\n'
-                    'Ao clicar em qualquer botão abaixo, você será direcionado para fora do aplicativo!',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w400, // Título em negrito
+      body: Scrollbar(
+        thumbVisibility: true,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              const SizedBox(height: 20),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.0),
+                child: Text(
+                  'Aproveite as indicações para descobrir mais sobre Educação Financeira e ficar atualizado.\n'
+                      'Ao clicar em qualquer botão abaixo, você será direcionado para fora do aplicativo!',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  textAlign: TextAlign.justify,
                 ),
-                textAlign: TextAlign.justify, // Define o alinhamento do texto como justificado
               ),
-            ),
-            const SizedBox(height: 20),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: _construirListaDeBotoes(),
-            ),
-          ],
+              const SizedBox(height: 20),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: _construirListaDeBotoes(),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
+
 }
