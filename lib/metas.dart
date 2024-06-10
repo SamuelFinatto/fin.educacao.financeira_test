@@ -19,12 +19,13 @@ class _MetasState extends State<Metas> {
   String? _tipoPeriodoSelecionado;
   int _quantidadeMetas = 0;
   int _quantidadeInvestimentos = 0;
-  final NumberFormat _currencyFormat =
-      NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$');
+  final NumberFormat _currencyFormat = NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$');
   final TextEditingController _instituicaoController = TextEditingController();
   final TextEditingController _nomeTituloController = TextEditingController();
   final TextEditingController _dataPosicaoController = TextEditingController();
   final TextEditingController _valorInvestController = TextEditingController();
+  String? _documentIdInvestimento;
+  String? _documentIdMeta;
 
   @override
   void initState() {
@@ -60,6 +61,11 @@ class _MetasState extends State<Metas> {
     return _currencyFormat.format(double.parse(cleanValue) / 100);
   }
 
+  String formatEdit(String value) {
+    final cleanValue = value.replaceAll(RegExp(r'\D'), '');
+    return _currencyFormat.format(double.parse(value));
+  }
+
   Future<void> _contarMetas() async {
     final QuerySnapshot snapshot = await FirebaseFirestore.instance
         .collection('metas')
@@ -85,77 +91,65 @@ class _MetasState extends State<Metas> {
   Future<void> _salvarMetas() async {
     final String periodo = _periodoController.text;
     final double valor = double.tryParse(_valorController.text
-            .replaceAll('.', '')
-            .replaceAll(',', '.')
-            .replaceAll('R\$', '')) ??
+        .replaceAll('.', '')
+        .replaceAll(',', '.')
+        .replaceAll('R\$', '')) ??
         0.0;
     final String tipoPeriodo = _tipoPeriodoSelecionado ?? 'anos';
 
     if (periodo.isNotEmpty && valor > 0) {
       try {
-        final QuerySnapshot snapshot = await FirebaseFirestore.instance
-            .collection('metas')
-            .where('email', isEqualTo: widget.email)
-            .get();
+        if (_documentIdMeta != null) {
+          // Atualiza o documento existente
+          await FirebaseFirestore.instance.collection('metas').doc(_documentIdMeta).update({
+            'periodo': periodo,
+            'valor': valor,
+            'tipoperiodo': tipoPeriodo,
+            'email': widget.email,
+            'datafimparameta': _calcularDataFim(tipoPeriodo, periodo),
+          });
 
-        if (snapshot.docs.length >= 20) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Você atingiu o limite máximo de 20 metas.'),
+              content: Text('Meta atualizada com sucesso!'),
               duration: Duration(seconds: 2),
             ),
           );
-          return;
-        }
-
-        final DateTime now = DateTime.now();
-        final int periodoInt = int.parse(periodo);
-        DateTime dataFimParameta;
-
-        if (tipoPeriodo == 'anos') {
-          dataFimParameta = DateTime(now.year + periodoInt, now.month, now.day);
         } else {
-          int futureYear = now.year;
-          int futureMonth = now.month + periodoInt;
+          final QuerySnapshot snapshot = await FirebaseFirestore.instance
+              .collection('metas')
+              .where('email', isEqualTo: widget.email)
+              .get();
 
-          while (futureMonth > 12) {
-            futureMonth -= 12;
-            futureYear += 1;
+          if (snapshot.docs.length >= 20) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Você atingiu o limite máximo de 20 metas.'),
+                duration: Duration(seconds: 2),
+              ),
+            );
+            return;
           }
 
-          int lastDayOfFutureMonth =
-              DateTime(futureYear, futureMonth + 1, 0).day;
-          int futureDay = now.day;
+          await FirebaseFirestore.instance.collection('metas').add({
+            'periodo': periodo,
+            'valor': valor,
+            'tipoperiodo': tipoPeriodo,
+            'email': widget.email,
+            'datafimparameta': _calcularDataFim(tipoPeriodo, periodo),
+          });
 
-          if (futureDay > lastDayOfFutureMonth) {
-            futureDay = lastDayOfFutureMonth;
-          }
-
-          if (futureMonth == 2 && futureDay == 29 && !_isLeapYear(futureYear)) {
-            futureDay = 28;
-          }
-
-          dataFimParameta = DateTime(futureYear, futureMonth, futureDay);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Meta salva com sucesso!'),
+              duration: Duration(seconds: 2),
+            ),
+          );
         }
-
-        await FirebaseFirestore.instance.collection('metas').add({
-          'periodo': periodo,
-          'valor': valor,
-          'tipoperiodo': tipoPeriodo,
-          'email': widget.email,
-          'datafimparameta': dataFimParameta,
-        });
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Meta salva com sucesso!'),
-            duration: Duration(seconds: 2),
-          ),
-        );
 
         _periodoController.clear();
         _valorController.clear();
-
+        _documentIdMeta = null; // Reseta o ID do documento
         _contarMetas(); // Atualiza o contador de metas
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -173,6 +167,53 @@ class _MetasState extends State<Metas> {
         ),
       );
     }
+  }
+
+  DateTime _calcularDataFim(String tipoPeriodo, String periodo) {
+    final DateTime now = DateTime.now();
+    final int periodoInt = int.parse(periodo);
+    DateTime dataFimParameta;
+
+    if (tipoPeriodo == 'anos') {
+      dataFimParameta = DateTime(now.year + periodoInt, now.month, now.day);
+    } else {
+      int futureYear = now.year;
+      int futureMonth = now.month + periodoInt;
+
+      while (futureMonth > 12) {
+        futureMonth -= 12;
+        futureYear += 1;
+      }
+
+      int lastDayOfFutureMonth = DateTime(futureYear, futureMonth + 1, 0).day;
+      int futureDay = now.day;
+
+      if (futureDay > lastDayOfFutureMonth) {
+        futureDay = lastDayOfFutureMonth;
+      }
+
+      if (futureMonth == 2 && futureDay == 29 && !_isLeapYear(futureYear)) {
+        futureDay = 28;
+      }
+
+      dataFimParameta = DateTime(futureYear, futureMonth, futureDay);
+    }
+
+    return dataFimParameta;
+  }
+
+
+  bool _isLeapYear(int year) {
+    if (year % 4 == 0) {
+      if (year % 100 == 0) {
+        if (year % 400 == 0) {
+          return true;
+        }
+        return false;
+      }
+      return true;
+    }
+    return false;
   }
 
   // Método para salvar investimento no Firestore
@@ -206,24 +247,12 @@ class _MetasState extends State<Metas> {
       return;
     } else {
       try {
-        final QuerySnapshot snapshot = await FirebaseFirestore.instance
-            .collection('investimentos')
-            .where('email', isEqualTo: widget.email)
-            .get();
-
-        if (snapshot.docs.length >= 100) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content:
-                  Text('Você atingiu o limite máximo de 100 investimentos.'),
-              duration: Duration(seconds: 2),
-            ),
-          );
-          return;
-        } else {
-          // Aqui você pode adicionar a lógica para salvar os dados no Firestore
-          // Exemplo:
-          FirebaseFirestore.instance.collection('investimentos').add({
+        if (_documentIdInvestimento != null) {
+          // Atualiza o documento existente
+          await FirebaseFirestore.instance
+              .collection('investimentos')
+              .doc(_documentIdInvestimento)
+              .update({
             'instituicao': instituicao,
             'nome_titulo': nomeTitulo,
             'data_posicao': dataPosicao,
@@ -233,17 +262,50 @@ class _MetasState extends State<Metas> {
 
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Investimento salvo com sucesso!'),
+              content: Text('Investimento atualizado com sucesso!'),
               duration: Duration(seconds: 2),
             ),
           );
+        } else {
+          final QuerySnapshot snapshot = await FirebaseFirestore.instance
+              .collection('investimentos')
+              .where('email', isEqualTo: widget.email)
+              .get();
 
-          // Limpar os campos após salvar
-          _limparCamposInvest();
-          _contarInvestimentos();
-          // Fecha o teclado
-          FocusScope.of(context).unfocus();
+          if (snapshot.docs.length >= 100) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content:
+                    Text('Você atingiu o limite máximo de 100 investimentos.'),
+                duration: Duration(seconds: 2),
+              ),
+            );
+            return;
+          } else {
+            // Aqui você pode adicionar a lógica para salvar os dados no Firestore
+            // Exemplo:
+            FirebaseFirestore.instance.collection('investimentos').add({
+              'instituicao': instituicao,
+              'nome_titulo': nomeTitulo,
+              'data_posicao': dataPosicao,
+              'valor': valor,
+              'email': widget.email,
+            });
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Investimento salvo com sucesso!'),
+                duration: Duration(seconds: 2),
+              ),
+            );
+          }
         }
+
+        // Limpar os campos após salvar
+        _limparCamposInvest();
+        _contarInvestimentos();
+        // Fecha o teclado
+        FocusScope.of(context).unfocus();
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -256,11 +318,69 @@ class _MetasState extends State<Metas> {
     }
   }
 
+  Future<void> _preencherCamposInvestimento(String id) async {
+    try {
+      DocumentSnapshot document = await FirebaseFirestore.instance
+          .collection('investimentos')
+          .doc(id)
+          .get();
+
+      if (document.exists) {
+        Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+
+        setState(() {
+          _instituicaoController.text = data['instituicao'];
+          _nomeTituloController.text = data['nome_titulo'];
+          _valorInvestController.text = formatEdit(data['valor'].toString());
+          _dataPosicaoController.text =
+              DateFormat('dd/MM/yyyy').format(data['data_posicao'].toDate());
+          _documentIdInvestimento = id; // Armazena o ID do documento para a atualização
+        });
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Erro ao carregar os dados do investimento.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+
+  Future<void> _preencherCamposMeta(String id) async {
+    try {
+      DocumentSnapshot document = await FirebaseFirestore.instance
+          .collection('metas')
+          .doc(id)
+          .get();
+
+      if (document.exists) {
+        Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+
+        setState(() {
+          _periodoController.text = data['periodo'];
+          _tipoPeriodoSelecionado = data['tipoperiodo'];
+          _valorController.text = formatEdit(data['valor'].toString());
+          _documentIdMeta = id; // Armazena o ID do documento para a atualização
+        });
+      }
+    } catch (e) {
+      print(e);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Erro ao carregar os dados da meta.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+
   void _limparCampos() {
     setState(() {
       _periodoController.clear();
       _valorController.text = 'R\$ 0,00';
       _tipoPeriodoSelecionado = 'anos';
+      _documentIdMeta = null;
     });
   }
 
@@ -308,25 +428,13 @@ class _MetasState extends State<Metas> {
     }
   }
 
-  bool _isLeapYear(int year) {
-    if (year % 4 == 0) {
-      if (year % 100 == 0) {
-        if (year % 400 == 0) {
-          return true;
-        }
-        return false;
-      }
-      return true;
-    }
-    return false;
-  }
-
   // Método para limpar os campos de texto
   void _limparCamposInvest() {
     _instituicaoController.clear();
     _nomeTituloController.clear();
-    _dataPosicaoController.clear();
     _valorInvestController.text = 'R\$ 0,00';
+    _dataPosicaoController.clear();
+    _documentIdInvestimento = null; // Reseta o ID do documento
   }
 
   @override
@@ -494,6 +602,8 @@ class _MetasState extends State<Metas> {
               focusNode: _valorFocusNode,
               decoration: InputDecoration(
                 labelText: 'Valor',
+                contentPadding: EdgeInsets.symmetric(
+                    vertical: 0), // Ajusta o espaçamento interno
               ),
               keyboardType: TextInputType.numberWithOptions(decimal: true),
               onChanged: (value) {
@@ -603,7 +713,8 @@ class _MetasState extends State<Metas> {
             ),
             SizedBox(height: 10),
             Container(
-              height: MediaQuery.of(context).size.height - 450, // 40% da altura da tela
+              height: MediaQuery.of(context).size.height -
+                  450, // 40% da altura da tela
               child: FutureBuilder<QuerySnapshot>(
                 future: FirebaseFirestore.instance
                     .collection('metas')
@@ -644,11 +755,22 @@ class _MetasState extends State<Metas> {
                               "\nValor de: $valorFormatado"
                               "\nData esperada: $dataFimFormatada",
                             ),
-                            trailing: IconButton(
-                              icon: Icon(Icons.delete),
-                              onPressed: () {
-                                _excluirMeta(id);
-                              },
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  icon: Icon(Icons.edit),
+                                  onPressed: () {
+                                    _preencherCamposMeta(id);
+                                  },
+                                ),
+                                IconButton(
+                                  icon: Icon(Icons.delete),
+                                  onPressed: () {
+                                    _excluirMeta(id);
+                                  },
+                                ),
+                              ],
                             ),
                           ),
                           if (index != metas.length - 1) Divider(),
@@ -668,8 +790,6 @@ class _MetasState extends State<Metas> {
   Widget _buildInvestimentosTab() {
     return LayoutBuilder(
       builder: (context, constraints) {
-        double availableHeight = constraints.maxHeight;
-
         return SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -774,10 +894,7 @@ class _MetasState extends State<Metas> {
                             contentPadding: EdgeInsets.symmetric(
                                 vertical: 0), // Ajusta o espaçamento interno
                           ),
-                          keyboardType: TextInputType.number,
-                          inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.digitsOnly,
-                          ],
+                          keyboardType: TextInputType.numberWithOptions(decimal: true),
                           onChanged: (value) {
                             final previousCursorPosition =
                                 _valorInvestController.selection.baseOffset;
@@ -886,7 +1003,8 @@ class _MetasState extends State<Metas> {
                   ),
                   SizedBox(height: 10),
                   Container(
-                    height: MediaQuery.of(context).size.height - 480, // 40% da altura da tela
+                    height: MediaQuery.of(context).size.height -
+                        480, // 40% da altura da tela
                     child: FutureBuilder<QuerySnapshot>(
                       future: FirebaseFirestore.instance
                           .collection('investimentos')
@@ -942,11 +1060,22 @@ class _MetasState extends State<Metas> {
                                     "\nEm $dataPosicaoFormatada"
                                     "\nValor de: $valorInvestFormatado",
                                   ),
-                                  trailing: IconButton(
-                                    icon: Icon(Icons.delete),
-                                    onPressed: () {
-                                      _excluirInvestimento(id);
-                                    },
+                                  trailing: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      IconButton(
+                                        icon: Icon(Icons.edit),
+                                        onPressed: () {
+                                          _preencherCamposInvestimento(id);
+                                        },
+                                      ),
+                                      IconButton(
+                                        icon: Icon(Icons.delete),
+                                        onPressed: () {
+                                          _excluirInvestimento(id);
+                                        },
+                                      ),
+                                    ],
                                   ),
                                 ),
                                 if (index != investimentos.length - 1 &&
