@@ -16,17 +16,17 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.10+11
+version: 1.0.11+12
 
 environment:
   sdk: '>=3.1.0 <4.0.0'
 
-# Dependencies specify other packages that your package needs in order to work.
-# To automatically upgrade your package dependencies to the latest versions
-# consider running `flutter pub upgrade --major-versions`. Alternatively,
-# dependencies can be manually updated by changing the version numbers below to
-# the latest version available on pub.dev. To see which dependencies have newer
-# versions available, run `flutter pub outdated`.
+  # Dependencies specify other packages that your package needs in order to work.
+  # To automatically upgrade your package dependencies to the latest versions
+  # consider running `flutter pub upgrade --major-versions`. Alternatively,
+  # dependencies can be manually updated by changing the version numbers below to
+  # the latest version available on pub.dev. To see which dependencies have newer
+  # versions available, run `flutter pub outdated`.
 
   # flutter_html: ^2.1.2  ************NUNCA UTILIZAR ESSA DEPENDÊNCIA DO CARALHO QUE SÓ GEROU PROBLEMAS************
 
@@ -50,15 +50,20 @@ dependencies:
   cupertino_icons: ^1.0.2
   firebase_auth: ^4.10.1
   cloud_firestore: ^4.14.0
-  flutter_native_splash: ^2.3.3
+  flutter_native_splash: ^2.3.7
 
 flutter_native_splash:
   color: "#08005e"
   image: "assets/images/logo_fin.png"
   android: true
   ios: true
+  android_12:
+    color: "#08005e"
+    image: "assets/images/logo_fin_android_12.png"
 
-
+# a cada modificação no native_splash, executar:
+# dart run flutter_native_splash:remove
+# dart run flutter_native_splash:create
 
 dev_dependencies:
   flutter_test:
@@ -103,6 +108,8 @@ flutter:
     - assets/images/anonimo.png
     - assets/images/anonimo_branco_maior_na_esquerda.png
     - assets/images/logo_fin.png
+    - assets/images/logo_fin_android_12.png
+    - assets/images/logo_fin_alternativo.png
     - assets/images/whatsapp.png
     - assets/images/internet.png
 

@@ -24,6 +24,7 @@ if (flutterVersionName == null) {
 }
 
 android {
+
     namespace "com.fin.educacao.financeira"
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion

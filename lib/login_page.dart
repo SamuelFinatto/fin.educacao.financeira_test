@@ -139,7 +139,7 @@ class LoginBody extends StatelessWidget {
                 children: <Widget>[
                   SizedBox(height: 300), // Adiciona um espaço acima dos botões
                   SizedBox(
-                    width: 280, // Defina a largura desejada
+                    width: 320, // Defina a largura desejada
                     height: 48, // Defina a altura desejada
                     child: Material(
                       borderRadius: BorderRadius.circular(17), // Define o raio dos cantos
@@ -189,7 +189,7 @@ class LoginBody extends StatelessWidget {
                                     const SizedBox(width: 16), // Adiciona um espaço entre a imagem e o texto
                                     Expanded(
                                       child: const Text(
-                                        'Login com Google',
+                                        'Entrar com o Google',
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           fontSize: 18,
@@ -211,7 +211,7 @@ class LoginBody extends StatelessWidget {
                   SizedBox(height: 25), // Adiciona um espaço entre os botões
 
                   SizedBox(
-                    width: 280, // Defina a largura desejada
+                    width: 320, // Defina a largura desejada
                     height: 48, // Defina a altura desejada
                     child: Material(
                       borderRadius: BorderRadius.circular(17), // Define o raio dos cantos
@@ -261,7 +261,7 @@ class LoginBody extends StatelessWidget {
                                     const SizedBox(width: 16), // Adiciona um espaço entre a imagem e o texto
                                     Expanded(
                                       child: const Text(
-                                        'Login Anônimo',
+                                        'Entrar como anônimo(a)',
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           fontSize: 18,
