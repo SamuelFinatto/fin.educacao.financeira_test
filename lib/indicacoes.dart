@@ -117,39 +117,48 @@ class _IndicacoesState extends State<Indicacoes> {
         String url = conteudo['url'] ?? '';
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
-          child: ElevatedButton(
-            onPressed: () {
+          child: InkWell(
+            onTap: () {
               _confirmarAbrirURL(url, titulo);
             },
-            style: ElevatedButton.styleFrom(
-              foregroundColor: Colors.white,
-              backgroundColor: Color(0xFF004086),
-              shape: RoundedRectangleBorder(
+            child: Ink(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xFF1000D3), Color(0xFF1A6BFF)],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
                 borderRadius: BorderRadius.circular(10),
               ),
-              minimumSize: Size(double.infinity, 45),
-              padding: EdgeInsets.all(10),
-            ),
-            child: Row(
-              children: [
-                Image.asset(
-                  'assets/images/internet.png',
-                  width: 38,
-                  height: 38,
-                ),
-                SizedBox(width: 10),
-                Flexible(
-                  child: Text(
-                    titulo,
-                    style: const TextStyle(
-                      fontSize: 17,
+              child: Container(
+                padding: EdgeInsets.all(10),
+                alignment: Alignment.centerLeft,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,  // Adjusts size to content
+                  children: [
+                    Image.asset(
+                      'assets/images/internet.png',
+                      width: 38,
+                      height: 38,
                     ),
-                  ),
+                    SizedBox(width: 10),
+                    Flexible(
+                      child: Text(
+                        titulo,
+                        style: const TextStyle(
+                          fontSize: 17,
+                          color: Colors.white,
+                        ),
+                        softWrap: true, // Allows text wrapping
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         );
+
       }).toList());
     }
 

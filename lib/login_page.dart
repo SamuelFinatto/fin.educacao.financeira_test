@@ -23,7 +23,7 @@ class LoginBody extends StatelessWidget {
   Future<void> _navigateToHomePage(BuildContext context) async {
     final User? user = await _signInWithGoogle();
     if (user != null) {
-      userName = user.displayName ?? "Usuário Anônimo"; // Use displayName ou "Usuário Anônimo" se for nulo
+      userName = user.displayName ?? "usuário Anônimo"; // Use displayName ou "Usuário Anônimo" se for nulo
       email = user.email ?? "login sem email";
 
       Navigator.of(context).push(
@@ -42,7 +42,7 @@ class LoginBody extends StatelessWidget {
       UserCredential userCredential = await FirebaseAuth.instance.signInAnonymously();
       User? user = userCredential.user;
       if (user != null) {
-        userName = "Usuário Anônimo"; // Use displayName ou "Usuário Anônimo" se for nulo
+        userName = "usuário Anônimo"; // Use displayName ou "Usuário Anônimo" se for nulo
         email = "Login sem email";
 
         Navigator.of(context).push(

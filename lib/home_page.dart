@@ -275,7 +275,7 @@ class HomePage extends StatelessWidget {
                   ),
                   child: InkWell(
                     onTap: () {
-                      if (userName == 'Usuário Anônimo') {
+                      if (userName == 'usuário Anônimo') {
                         // Exibir o aviso personalizado se o userName for "Usuário Anônimo"
                         _showCustomSnackBar(context, 'Você precisa fazer login com sua conta do Gmail para acessar esta tela.');
                       } else {
@@ -560,7 +560,7 @@ class MyDrawer extends StatelessWidget {
             ),
           ),
 
-          userName != 'Usuário Anônimo'
+          userName != 'usuário Anônimo'
               ? ListTile(
             onTap: () {
                 Navigator.push(
