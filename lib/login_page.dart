@@ -1,8 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'home_page.dart'; // Importe a classe HomePage
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 class LoginPage extends StatelessWidget {
   @override
@@ -21,24 +24,231 @@ class LoginBody extends StatelessWidget {
   String email = "";
 
   Future<void> _navigateToHomePage(BuildContext context) async {
-    final User? user = await _signInWithGoogle();
-    if (user != null) {
-      userName = user.displayName ?? "usuário Anônimo"; // Use displayName ou "Usuário Anônimo" se for nulo
-      email = user.email ?? "login sem email";
-
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => HomePage(userName, email, _signOut), // Passe o nome do usuário para a HomePage
+    var connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.none) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("Erro de conexão!"),
+          content: SingleChildScrollView( // Use SingleChildScrollView para evitar overflow
+            child: ListBody( // Use ListBody para compor múltiplos widgets verticalmente
+              children: <Widget>[
+                Row( // Usa Row para adicionar ícone ao lado do texto
+                  children: <Widget>[
+                    Icon(Icons.signal_wifi_off, color: Colors.red), // Ícone de "sem sinal"
+                    SizedBox(width: 10), // Espaço entre ícone e texto
+                    Expanded( // Expanded para preencher o espaço horizontal restante
+                      child: Text(
+                        "Nenhuma conexão com a internet detectada. Conecte-se à internet para entrar no aplicativo Fin.",
+                        textAlign: TextAlign.justify, // Justifica o texto
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
         ),
       );
+      return;
+    }
+
+    final User? user = await _signInWithGoogle();
+    String url = await _fetchPrivacyPolicyUrl();  // Busca a URL da política de privacidade
+    if (user != null) {
+      print(user.email);
+      // Verifica se o usuário aceitou a política de privacidade
+      if (await _hasAcceptedPrivacyPolicy(user.email)) {
+        // Continua para a HomePage se aceitou a política
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => HomePage(user.displayName ?? "Usuário Anônimo", user.email ?? "login sem email", _signOut),
+        ));
+      }else {
+        // Mostra um aviso se não aceitou a política
+        showDialog(
+          context: context,
+          barrierDismissible: false,  // Impede que o diálogo seja fechado sem uma ação explícita
+          builder: (context) => AlertDialog(
+            title: Text("Política de Privacidade"),
+            content: RichText(
+              text: TextSpan(
+                style: Theme.of(context).textTheme.bodyText1, // Estilo do texto padrão
+                children: [
+                  TextSpan(
+                    text: "Você deve aceitar a ",
+                    style: TextStyle(fontSize: 15), // Ajusta o tamanho da fonte para 18
+                  ),
+                  TextSpan(
+                    text: 'política de privacidade',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      decoration: TextDecoration.underline,
+                      fontSize: 15, // Ajusta o tamanho da fonte para 18
+                    ),
+                    recognizer: TapGestureRecognizer()..onTap = () {
+                      _launchURL(url); // Substitua pelo link real da sua política
+                    },
+                  ),
+                  TextSpan(
+                    text: " para usar o aplicativo Fin.\n\n"
+                        "Caso queira revogar seu aceite no futuro, você poderá fazer isso a qualquer momento através do menu lateral esquerdo, em Configurações da conta.\n\n"
+                        "Caso não aceite, você apenas poderá utilizar o Fin como anônimo(a).",
+                    style: TextStyle(fontSize: 15),
+                  ),
+                ],
+              ),
+            ),
+              actions: <Widget>[
+                TextButton(
+                  child: Text(
+                    'Não aceitar',
+                    style: TextStyle(fontSize: 16),  // Ajusta o tamanho da fonte para 18
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();  // Fecha o diálogo
+                    _signOut(context);  // Chama a função para fazer logout
+                  },
+                ),
+              TextButton(
+                child: Text(
+                  'Aceitar e Entrar',
+                  style: TextStyle(fontSize: 16),  // Ajusta o tamanho da fonte para 18),
+                ),
+                onPressed: () async {
+                  // Salva a aceitação no Firestore
+                  await FirebaseFirestore.instance.collection('politicadeprivacidade').add({
+                    'email': user.email,  // Assuma que 'email' é uma variável disponível que contém o e-mail do usuário
+                    'aceite': true,
+                    'dataultimaalteracao': DateTime.now(),  // Registra a data e hora do aceite
+                  });
+                  Navigator.of(context).pop();  // Fecha o diálogo após salvar
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => HomePage(user.displayName ?? "Usuário Anônimo", user.email ?? "login sem email", _signOut),
+                  ));
+                },
+              ),
+            ],
+          ),
+        );
+      }
 
     } else {
-      // Trate erro de autenticação.
+      // Trate o erro de autenticação, se necessário
+    }
+  }
+
+  // Função para abrir URLs
+  _launchURL(String url) async {
+    await launch(url);
+  }
+
+  Future<String> _fetchPrivacyPolicyUrl() async {
+    try {
+      // Busca o documento único na coleção 'urlpoliticadeprivacidade'
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+          .collection('urlpoliticadeprivacidade')
+          .doc('UovFeUKrFWLnmQeXwFEr')  // Substitua 'uniqueDocumentId' pelo ID real do documento se necessário
+          .get();
+
+      if (documentSnapshot.exists) {
+        return documentSnapshot.get('url');  // Pega a URL da política de privacidade
+      } else {
+        throw Exception("Documento de URL da política de privacidade não encontrado.");
+      }
+    } catch (e) {
+      print("Erro ao buscar URL da política de privacidade: $e");
+      rethrow;  // Relança a exceção para ser tratada onde a função é chamada
+    }
+  }
+
+  Future<bool> _hasAcceptedPrivacyPolicy(String? email) async {
+    if (email == null) {
+      print("E-mail is null");
+      return false;
+    }
+    try {
+      // Consulta a coleção para encontrar documentos onde o campo 'email' corresponde ao e-mail do usuário e 'aceite' é true
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('politicadeprivacidade')
+          .where('email', isEqualTo: email)
+          .where('aceite', isEqualTo: true)
+          .get();
+
+      // Verifica se algum documento foi retornado
+      if (querySnapshot.docs.isNotEmpty) {
+        print("Privacy policy accepted");
+        return true;
+      } else {
+        print("No document found or privacy policy not accepted");
+        return false;
+      }
+    } catch (e) {
+      print("Error checking privacy policy: $e");
+      return false;
+    }
+  }
+
+
+  Future<User?> _signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      if (googleUser == null) return null;
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+      final UserCredential authResult = await FirebaseAuth.instance.signInWithCredential(credential);
+      return authResult.user;
+    } catch (error) {
+      print("Erro durante o login com o Google: $error");
+      return null;
     }
   }
 
   Future<void> _signInAnonymously(BuildContext context) async {
     try {
+      var connectivityResult = await Connectivity().checkConnectivity();
+      if (connectivityResult == ConnectivityResult.none) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text("Erro de conexão!"),
+            content: SingleChildScrollView( // Use SingleChildScrollView para evitar overflow
+              child: ListBody( // Use ListBody para compor múltiplos widgets verticalmente
+                children: <Widget>[
+                  Row( // Usa Row para adicionar ícone ao lado do texto
+                    children: <Widget>[
+                      Icon(Icons.signal_wifi_off, color: Colors.red), // Ícone de "sem sinal"
+                      SizedBox(width: 10), // Espaço entre ícone e texto
+                      Expanded( // Expanded para preencher o espaço horizontal restante
+                        child: Text(
+                          "Nenhuma conexão com a internet detectada. Conecte-se à internet para  entrar no aplicativo Fin.",
+                          textAlign: TextAlign.justify, // Justifica o texto
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text('OK'),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          ),
+        );
+        return;
+      }
+
       UserCredential userCredential = await FirebaseAuth.instance.signInAnonymously();
       User? user = userCredential.user;
       if (user != null) {
@@ -84,26 +294,6 @@ class LoginBody extends StatelessWidget {
   }
 
 
-  Future<User?> _signInWithGoogle() async {
-    try {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-      final GoogleSignInAuthentication googleAuth = await googleUser!.authentication;
-
-      final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      final UserCredential authResult = await FirebaseAuth.instance.signInWithCredential(credential);
-      final User? user = authResult.user;
-
-      return user;
-    } catch (error) {
-      print("Erro durante o login com o Google: $error");
-      return null;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -139,7 +329,7 @@ class LoginBody extends StatelessWidget {
                 children: <Widget>[
                   SizedBox(height: 300), // Adiciona um espaço acima dos botões
                   SizedBox(
-                    width: 320, // Defina a largura desejada
+                    width: 330, // Defina a largura desejada
                     height: 48, // Defina a altura desejada
                     child: Material(
                       borderRadius: BorderRadius.circular(17), // Define o raio dos cantos
@@ -211,7 +401,7 @@ class LoginBody extends StatelessWidget {
                   SizedBox(height: 25), // Adiciona um espaço entre os botões
 
                   SizedBox(
-                    width: 320, // Defina a largura desejada
+                    width: 330, // Defina a largura desejada
                     height: 48, // Defina a altura desejada
                     child: Material(
                       borderRadius: BorderRadius.circular(17), // Define o raio dos cantos

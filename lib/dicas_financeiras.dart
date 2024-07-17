@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-import 'components/custom_scrollbar.dart';
-import 'database.dart';
 
 class DicasFinanceiras extends StatefulWidget {
   @override
@@ -89,22 +85,6 @@ class _DicasFinanceirasState extends State<DicasFinanceiras> {
     );
   }
 
-  Widget _buildPageView() {
-    return PageView.builder(
-      itemCount: dicasFinanceirasList.length,
-      controller: PageController(initialPage: _currentIndex),
-      onPageChanged: (int index) {
-        setState(() {
-          _currentIndex = index;
-        });
-      },
-      itemBuilder: (BuildContext context, int index) {
-        return _buildCard(dicasFinanceirasList[index]);
-      },
-    );
-  }
-
-  @override
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -213,42 +193,61 @@ class _DicasFinanceirasState extends State<DicasFinanceiras> {
           ],
         ),
       ),
-      bottomNavigationBar: Container(
-        height: 90, // Define a altura desejada para a barra
-        child: BottomAppBar(
-          elevation: 0, // Remove a sombra do BottomAppBar
-          color: Theme.of(context)
-              .scaffoldBackgroundColor, // Use a cor de fundo da tela principal
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              IconButton(
-                icon: Icon(Icons.arrow_back_ios),
-                iconSize: 45, // Define o tamanho do ícone
-                onPressed: () {
-                  _pageController.previousPage(
-                      duration: Duration(milliseconds: 500),
-                      curve: Curves.ease);
-                },
-              ),
-              Text(
-                "${_currentIndex + 1} / ${dicasFinanceirasList.length}",
-                // Mostra o contador de páginas
-                style: TextStyle(fontSize: 20), // Estilo do texto do contador
-              ),
-              IconButton(
-                icon: Icon(Icons.arrow_forward_ios),
-                iconSize: 45, // Define o tamanho do ícone
-                onPressed: () {
-                  _pageController.nextPage(
-                      duration: Duration(milliseconds: 500),
-                      curve: Curves.ease);
-                },
-              ),
-            ],
+        bottomNavigationBar: Container(
+          height: 90, // Define a altura desejada para a barra
+          child: BottomAppBar(
+            elevation: 0, // Remove a sombra do BottomAppBar
+            color: Theme.of(context).scaffoldBackgroundColor, // Usa a cor de fundo da tela principal
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.arrow_back_ios),
+                  iconSize: 45, // Define o tamanho do ícone
+                  onPressed: () {
+                    if (_currentIndex > 0) {
+                      _pageController.previousPage(
+                          duration: Duration(milliseconds: 500),
+                          curve: Curves.ease
+                      );
+                    } else {
+                      _pageController.animateToPage(
+                          dicasFinanceirasList.length - 1,
+                          duration: Duration(milliseconds: 500),
+                          curve: Curves.ease
+                      );
+                    }
+                  },
+                ),
+                Text(
+                  dicasFinanceirasList.isNotEmpty
+                      ? "${(_currentIndex % dicasFinanceirasList.length) + 1} / ${dicasFinanceirasList.length}"
+                      : "0 / 0", // Mostra 0/0 se a lista estiver vazia
+                  style: TextStyle(fontSize: 20), // Estilo do texto do contador
+                ),
+                IconButton(
+                  icon: Icon(Icons.arrow_forward_ios),
+                  iconSize: 45, // Define o tamanho do ícone
+                  onPressed: () {
+                    if (_currentIndex < dicasFinanceirasList.length - 1) {
+                      _pageController.nextPage(
+                          duration: Duration(milliseconds: 500),
+                          curve: Curves.ease
+                      );
+                    } else {
+                      _pageController.animateToPage(
+                          0,
+                          duration: Duration(milliseconds: 500),
+                          curve: Curves.ease
+                      );
+                    }
+                  },
+                ),
+              ],
+            ),
           ),
-        ),
-      ),
+        )
+
     );
   }
 }

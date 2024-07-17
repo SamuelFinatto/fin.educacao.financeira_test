@@ -3,10 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Glossario extends StatefulWidget {
   @override
-  _GlossariosState createState() => _GlossariosState();
+  _GlossarioState createState() => _GlossarioState();
 }
 
-class _GlossariosState extends State<Glossario> {
+class _GlossarioState extends State<Glossario> {
   late String documentId;
   late String collectionName = 'glossario'; // Nome da coleção pai
   ScrollController _scrollController = ScrollController(); // ScrollController para controlar a rolagem
@@ -38,25 +38,31 @@ class _GlossariosState extends State<Glossario> {
             return Center(child: CircularProgressIndicator());
           }
 
-          return ListView.builder(
-            controller: _scrollController,
-            itemCount: snapshot.data!.docs.length,
-            itemBuilder: (context, index) {
-              DocumentSnapshot document = snapshot.data!.docs[index];
-              documentId = document.id;
-              Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4.0),
-                child: MyExpansionTile(
-                  title: "${index + 1}. ${data['titulo']}",
-                  content: data['texto'],
-                  documentId: documentId,
-                  index: index,
-                  totalItems: snapshot.data!.docs.length,
-                  scrollController: _scrollController,
-                ),
-              );
-            },
+          return Scrollbar(
+            thumbVisibility: true, // Always show the scrollbar
+            controller: _scrollController, // Use the same scroll controller for the scrollbar and list
+            thickness: 6.0, // Set the thickness of the scrollbar
+            radius: Radius.circular(10), // Set the radius of the corners
+            child: ListView.builder(
+              controller: _scrollController,
+              itemCount: snapshot.data!.docs.length,
+              itemBuilder: (context, index) {
+                DocumentSnapshot document = snapshot.data!.docs[index];
+                documentId = document.id;
+                Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4.0),
+                  child: MyExpansionTile(
+                    title: "${index + 1}. ${data['titulo']}",
+                    content: data['texto'],
+                    documentId: documentId,
+                    index: index,
+                    totalItems: snapshot.data!.docs.length,
+                    scrollController: _scrollController,
+                  ),
+                );
+              },
+            ),
           );
         },
       ),
@@ -113,35 +119,29 @@ class MyExpansionTile extends StatefulWidget {
 
 class _MyExpansionTileState extends State<MyExpansionTile> {
   GlobalKey expansionTileKey = GlobalKey();
-  bool _isExpanded = false;
 
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
       key: expansionTileKey,
-      title: Text(
-        widget.title,
-        style: TextStyle(fontSize: 19, fontWeight: FontWeight.w500, color: Colors.green[900]),
+      title: Align(
+        alignment: Alignment.centerLeft,
+        child: Text(
+          widget.title,
+          style: TextStyle(fontSize: 19, fontWeight: FontWeight.w500, color: Colors.green[900]),
+        ),
       ),
-      onExpansionChanged: (bool expanded) {
-        setState(() {
-          _isExpanded = expanded;
-        });
-
-        if (expanded) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            _scrollToPosition(expansionTileKey, widget.scrollController);
-          });
-
-        }
-      },
       children: [
         Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(widget.content, style: TextStyle(fontSize: 18)),
+              Text(
+                widget.content,
+                style: TextStyle(fontSize: 18),
+                textAlign: TextAlign.justify,  // Justifying the content text
+              ),
               SizedBox(height: 10),
               SingleChildScrollView(
                 physics: NeverScrollableScrollPhysics(),
@@ -173,28 +173,13 @@ class _MyExpansionTileState extends State<MyExpansionTile> {
               title: subData['titulo'],
               content: subData['texto'],
               documentId: subDocument.id,
-              index: widget.index, // Use index from parent tile for consistent behavior
+              index: widget.index,
               totalItems: widget.totalItems,
               scrollController: widget.scrollController,
             );
           }).toList(),
         );
       },
-    );
-  }
-
-  void _scrollToPosition(GlobalKey key, ScrollController scrollController) {
-    final RenderBox box = key.currentContext!.findRenderObject() as RenderBox;
-    final position = box.localToGlobal(Offset.zero);
-    final targetOffset = scrollController.offset + position.dy - 91;  // 80 pixels from the top
-    final maxScrollExtent = scrollController.position.maxScrollExtent;
-
-    final newOffset = targetOffset > maxScrollExtent ? maxScrollExtent : targetOffset;
-
-    scrollController.animateTo(
-      newOffset,
-      duration: Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
     );
   }
 }

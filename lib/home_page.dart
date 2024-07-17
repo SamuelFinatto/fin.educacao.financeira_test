@@ -1,3 +1,4 @@
+import 'package:fin.educacao.financeira/configuracoes.dart';
 import 'package:fin.educacao.financeira/dicas_financeiras.dart';
 import 'package:fin.educacao.financeira/indicacoes.dart';
 import 'package:flutter/material.dart';
@@ -17,15 +18,6 @@ class HomePage extends StatelessWidget {
   final Function(BuildContext) signOut; // Modifique o tipo da função para aceitar uma função assíncrona
 
   const HomePage(this.userName, this.email, this.signOut);
-
-  // Método para abrir a URL no navegador
-  _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Não foi possível abrir a URL $url';
-    }
-  }
 
   void _showCustomSnackBar(BuildContext context, String message) {
 
@@ -51,6 +43,13 @@ class HomePage extends StatelessWidget {
 
     _isSnackBarVisible = true;
   }
+
+
+  // Função para abrir URLs
+  _launchURL(String url) async {
+    await launch(url);
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -442,276 +441,132 @@ class MyDrawer extends StatelessWidget {
 
   MyDrawer(this.onSignOut, this.userName, this.email, this.launchURL);
 
-  _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Não foi possível abrir a URL $url';
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
+    // Cria um controlador de rolagem dedicado
+    final ScrollController _scrollController = ScrollController();
+
     return Drawer(
       child: Column(
         children: <Widget>[
           SizedBox(
-            height: 150, // Define a altura desejada para o UserAccountsDrawerHeader
+            height: 150,
             child: UserAccountsDrawerHeader(
               accountName: Text(
                 '$userName',
                 style: TextStyle(
-                  fontWeight: FontWeight.bold, // Define o estilo para negrito
-                  fontSize: 16, // Define o tamanho da fonte para 16
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
                 ),
               ),
-              accountEmail: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('$email'),
-                  //SizedBox(height: 0), // Definindo altura como 0 para remover o espaço em branco
-                ],
-              ),
-              // currentAccountPicture: CircleAvatar(
-              //   backgroundImage: AssetImage('assets/images/perfil_transparente_com_sombra.png'),
-              // ),
+              accountEmail: Text('$email'),
               decoration: BoxDecoration(
-                color: Colors.green.shade800, // Define a cor de fundo como azul
+                color: Colors.green.shade800,
               ),
-              //margin: EdgeInsets.zero, // Remove o espaçamento externo do UserAccountsDrawerHeader
             ),
           ),
-
-
-
-
-          // ListTile(
-          //   leading: Icon(Icons.home),
-          //   title: Text('Login'),
-          //   onTap: () {
-          //     Navigator.of(context).pop(); // Ação quando o item é selecionado
-          //   },
-          // ),
-          ListTile(
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => JurosCompostos(),
-                ),
-              );
-            },
-            title: Row(
-              children: [
-                Icon(Icons.auto_graph),
-                SizedBox(width: 17), // Espaço entre o ícone e o texto
-                Text('Simular juros compostos'),
-              ],
-            ),
-          ),
-
-          ListTile(
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => Glossario(),
-                ),
-              );
-            },
-            title: Row(
-              children: [
-                Icon(Icons.text_snippet_outlined),
-                SizedBox(width: 17), // Espaço entre o ícone e o texto
-                Text('Glossário sobre\nEducação Financeira'),
-              ],
-            ),
-          ),
-
-          ListTile(
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => DicasFinanceiras(),
-                ),
-              );
-            },
-            title: Row(
-              children: [
-                Icon(Icons.thumb_up_alt_outlined),
-                SizedBox(width: 17), // Espaço entre o ícone e o texto
-                Text('Dicas Financeiras'),
-              ],
-            ),
-          ),
-
-          ListTile(
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => Indicacoes(),
-                ),
-              );
-            },
-            title: Row(
-              children: [
-                Icon(Icons.add_chart_outlined),
-                SizedBox(width: 17), // Espaço entre o ícone e o texto
-                Text('Indicações'),
-              ],
-            ),
-          ),
-
-          userName != 'usuário Anônimo'
-              ? ListTile(
-            onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => Metas(email: this.email)
-                  ), // Passando o email como argumento
-                );
-            },
-            title: Row(
-              children: [
-                Icon(Icons.task_alt_outlined),
-                SizedBox(width: 17), // Espaço entre o ícone e o texto
-                Text('Metas e Investimentos'),
-              ],
-            ),
-          )
-              : SizedBox.shrink(), // Não exibir nada se o userName for "Usuário Anônimo"
-
-          ListTile(
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => Orientador(),
-                ),
-              );
-            },
-            title: Row(
-              children: [
-                Icon(Icons.person_add_outlined),
-                SizedBox(width: 17), // Espaço entre o ícone e o texto
-                Text('Contatar Orientador Financeiro'),
-              ],
-            ),
-          ),
-
-          ListTile(
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => Doacao(),
-                ),
-              );
-            },
-            title: Row(
-              children: [
-                Icon(Icons.attach_money_outlined),
-                SizedBox(width: 17), // Espaço entre o ícone e o texto
-                Text('Doação ao projeto'),
-              ],
-            ),
-          ),
-
-          ListTile(
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => Sobre(),
-                ),
-              );
-            },
-            title: Row(
-              children: [
-                Icon(Icons.info_outline),
-                SizedBox(width: 17), // Espaço entre o ícone e o texto
-                Text('Sobre'),
-              ],
-            ),
-          ),
-
-
-          // ListTile(
-          //   leading: Icon(Icons.settings),
-          //   title: Text('Configurações'),
-          //   onTap: () {
-          //     // Ação quando o item é selecionado
-          //   },
-          // ),
           Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(bottom: 30, left: 10, right: 165), // Adicionando padding nos lados esquerdo e direito
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Material(
-                  borderRadius: BorderRadius.circular(17), // Define o raio dos cantos
-                  color: Colors.transparent, // Torna o Material transparente para permitir o gradiente de fundo
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(17), // Define o raio dos cantos
-                    onTap: () {
-                      onSignOut(context); // Chame a função de sign out
-                    },
-                    splashColor: Colors.white.withOpacity(0.5), // Define a cor do efeito de toque
-                    highlightColor: Colors.transparent, // Define a cor de destaque como transparente para remover a cor padrão
-                    child: Container(
-                      width: 200, // Defina a largura desejada para o botão
-                      height: 50,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [Color(0xFFFFFFFF), Color(0xFFFFFFFF)], // Cores do gradiente
-                          begin: Alignment.centerLeft, // Início do gradiente à esquerda
-                          end: Alignment.centerRight, // Fim do gradiente à direita
-                        ),
-                        borderRadius: BorderRadius.circular(17), // Define o raio dos cantos
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.4), // Cor da sombra
-                            spreadRadius: 2, // Espalhamento da sombra
-                            blurRadius: 5, // Desfoque da sombra
-                            offset: Offset(0, 0), // Deslocamento da sombra
-                          ),
-                        ],
-                      ),
-                      child: Material(
-                        type: MaterialType.transparency, // Torna o Material transparente
-                        borderRadius: BorderRadius.circular(17), // Define o raio dos cantos
-                        child: InkWell(
-                          onTap: () {
-                            onSignOut(context); // Chame a função de sign out
-                          },
-                          borderRadius: BorderRadius.circular(17), // Define o raio dos cantos
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 25), // Adicione um padding horizontal
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Icon(Icons.exit_to_app_outlined,
-                                    color: Colors.black54), // Cor do ícone, // Ícone "Sair"
-                                SizedBox(width: 17), // Espaço entre o ícone e o texto
-                                Text(
-                                  'Sair', // Texto "Sair"
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.black87, // Define a cor do texto como branco
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+            child: Scrollbar(
+              controller: _scrollController, // Utiliza o controlador de rolagem aqui
+              thumbVisibility: false,
+              thickness: 0.0,
+              child: SingleChildScrollView(
+                controller: _scrollController, // E aqui também
+                child: Column(
+                  children: <Widget>[
+                    _buildListTile(context, Icons.auto_graph, 'Simular juros compostos', JurosCompostos()),
+                    _buildListTile(context, Icons.text_snippet_outlined, 'Glossário sobre\nEducação Financeira', Glossario()),
+                    _buildListTile(context, Icons.thumb_up_alt_outlined, 'Dicas Financeiras', DicasFinanceiras()),
+                    _buildListTile(context, Icons.add_chart_outlined, 'Indicações', Indicacoes()),
+                    if (userName != 'usuário Anônimo')
+                      _buildListTile(context, Icons.task_alt_outlined, 'Metas e Investimentos', Metas(email: this.email)),
+                    _buildListTile(context, Icons.person_add_outlined, 'Contatar Orientador Financeiro', Orientador()),
+                    _buildListTile(context, Icons.attach_money_outlined, 'Doação ao projeto', Doacao()),
+                    _buildListTile(context, Icons.settings, 'Configurações da conta', Configuracoes(this.onSignOut,userEmail: this.email)),
+                    _buildListTile(context, Icons.info_outline, 'Sobre', Sobre())
+                  ],
                 ),
               ),
             ),
           ),
-
-
-
+          _buildLogoutButton(context),
         ],
       ),
     );
   }
+
+  Widget _buildListTile(BuildContext context, IconData icon, String title, Widget destination) {
+    return ListTile(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => destination,
+          ),
+        );
+      },
+      title: Row(
+        children: [
+          Icon(icon),
+          SizedBox(width: 17),
+          Text(title),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLogoutButton(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(top: 15, bottom: 15, left: 10, right: 165),
+      child: Material(
+        borderRadius: BorderRadius.circular(17),
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(17),
+          onTap: () => onSignOut(context),
+          splashColor: Colors.white.withOpacity(0.5),
+          highlightColor: Colors.transparent,
+          child: Container(
+            width: 200,
+            height: 50,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xFFFFFFFF), Color(0xFFFFFFFF)],
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+              ),
+              borderRadius: BorderRadius.circular(17),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.4),
+                  spreadRadius: 2,
+                  blurRadius: 5,
+                  offset: Offset(0, 0),
+                ),
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Icon(Icons.exit_to_app_outlined, color: Colors.black54),
+                  SizedBox(width: 17),
+                  Text(
+                    'Sair',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+
 }
